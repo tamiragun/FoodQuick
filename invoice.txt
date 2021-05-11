@@ -1,0 +1,20 @@
+Order number 1
+Customer: t
+Email: 1
+Phone number: 1
+Location: Cape Town
+ 
+You have ordered the following from 1 in Cape Town:
+ 
+1 x Hamburger (R90.0)
+
+Special instructions: No
+ 
+Total: R90.0
+ 
+Miranda Metcalfe is nearest to the restaurant and so he/she will be delivering your order to you at: 
+ 
+t
+Cape Town
+
+If you need to contact the restaurant, their number is 1.
