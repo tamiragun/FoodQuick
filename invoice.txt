@@ -1,14 +1,14 @@
 Order number 1
 Customer: t
-Email: 1
-Phone number: 1
+Email: t
+Phone number: t
 Location: Cape Town
  
-You have ordered the following from 1 in Cape Town:
+You have ordered the following from t in Cape Town:
  
 1 x Hamburger (R90.0)
 
-Special instructions: No
+Special instructions: no
  
 Total: R90.0
  
@@ -17,4 +17,4 @@ Miranda Metcalfe is nearest to the restaurant and so he/she will be delivering y
 t
 Cape Town
 
-If you need to contact the restaurant, their number is 1.
+If you need to contact the restaurant, their number is t.

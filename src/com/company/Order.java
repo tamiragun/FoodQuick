@@ -195,19 +195,6 @@ public class Order {
         this.menuItemsList = menuItemsList;
     }
 
-    /*For this setter, we keep adding rows to the attribute, rather than
-     * overriding it completely. Every time the ArrayList gets set, a new
-     * menu item, quantity and price is added.
-
-    private void setMenuItemsList(int quantity, String meal, double price) {
-        List list1=new ArrayList();
-        list1.add(quantity);
-        list1.add(meal);
-        list1.add(price);
-        menuItemsList.add(list1);
-    }
-    */
-
     public void setPreparationInstructions(String preparationInstructions) {
         this.preparationInstructions = preparationInstructions;
     }

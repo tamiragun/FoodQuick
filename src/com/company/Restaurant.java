@@ -6,7 +6,10 @@
 
 package com.company;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Formatter;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Restaurant {
 
@@ -51,7 +54,8 @@ public class Restaurant {
          */
         String closestDriver ="No drivers";
         int lowestLoad = 100;
-
+        ArrayList<String[]> allDrivers = new ArrayList<String[]>();
+        String newText = "";
 
         try {
             //Initialise Scanner instance within try/catch block
@@ -68,6 +72,7 @@ public class Restaurant {
                  */
                 String line = scnr1.nextLine();
                 String[] splittedLine = line.split(", ");
+                allDrivers.add(splittedLine);
 
                 /*IF the location element equals the location passed into the
                  * method as a parameter, then we check for the load. If not,
@@ -92,10 +97,7 @@ public class Restaurant {
                         closestDriver = driverName;
                     }
                 }
-
-
             }
-
         }
 
         //In case there is an error, print to the console instead of crashing
@@ -111,12 +113,52 @@ public class Restaurant {
             scnr1.close();
         }
 
-        //Return the closest driver, this will be used in the Customer class
+        /*If a driver is assigned, update the drivers.txt file to reflect the driver's new load*/
+        if (closestDriver != "No drivers") {
+
+            /*Loop through the arraylist of all split drivers, locations, and loads, and convert them to a single
+             * string that we'll write to the file. But when we encounter the nearest driver, we update their load to
+             * reflect the latest delivery.
+             */
+            for (int i=0; i<allDrivers.size();i++){
+                if (allDrivers.get(i)[0] == closestDriver) {
+                    //For the nearest driver, increment their load by one. Convert to string to match array type.
+                    allDrivers.get(i)[2] = String.valueOf(lowestLoad+1);
+                }
+                newText+= allDrivers.get(i)[0] + ", " + allDrivers.get(i)[1] + ", " + allDrivers.get(i)[2] + "\n";
+            }
+
+            //Create new File and Formatter so that the new list of drivers can be written to the drivers.txt file.
+            File text2 = new File("drivers.txt");
+            Formatter drivers = null;
+
+            try {
+                //The formatter will write to the same text we were just reading from above
+                drivers = new Formatter(text2);
+
+                //Write the new list of drivers to the file
+                drivers.format("%s", newText);
+
+            } catch (FileNotFoundException fileNotFoundException) {
+
+                //Display error message and error if this fails
+                fileNotFoundException.printStackTrace();
+
+            } finally {
+
+                //Close the file
+                if (drivers != null) {
+                    drivers.close();
+                }
+            }
+        }
+
+        //Return the closest driver, this will be used in the Order class
         return closestDriver;
     }
 
 
-    //getters and setters
+    //Access methods
     public String getName() {
         return this.name;
     }
@@ -153,7 +195,7 @@ public class Restaurant {
         return this.priceItem3;
     }
 
-
+    //Mutator methods
     public void setName(String name) {
         this.name = name;
     }
