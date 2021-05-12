@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Customer {
+public class Customer implements Comparable<Customer> {
 
     //Attributes unique to the customer
 
@@ -14,6 +14,7 @@ public class Customer {
     private String contactNumber;
     private String address;
     private String email;
+    private Order order;
 
     //Constructor method
 
@@ -26,35 +27,22 @@ public class Customer {
         this.email = email;
     }
 
-    // Method that takes user input and creates a customer object with it
+    /*Override compareTo() method of the interface so that Customer objects can be compared*/
+    @Override
+    public int compareTo(Customer customer) {
 
-    public static Customer newCustomer() {
+        if (this.name.compareToIgnoreCase(customer.getName()) == 0){
+            return 0;
+        }else if (this.name.compareToIgnoreCase(customer.getName()) == 1){
+            return 1;
+        }else {
+            return -1;
+        }
+    }
 
-        //Create scanner object to take input from the console
-        Scanner input = new Scanner(System.in);
-
-        //Save the inputs into variables that will be used to create Customer object
-        System.out.println("What is your name?");
-        String name = input.nextLine();
-
-        System.out.println("What is your address?");
-        String address = input.nextLine();
-
-        System.out.println("What city do you live in?");
-        String location = input.nextLine();
-
-        System.out.println("What is your phone number?");
-        String contactNumber = input.nextLine();
-
-        System.out.println("What is your email address?");
-        String email = input.nextLine();
-
-        //Create a customer object with the given input
-        Customer newCustomer = new Customer(name, location, contactNumber,
-                address, email);
-
-        //input1.close(); --Code doesn't run past this block if I close the scanner
-        return newCustomer;
+    @Override
+    public String toString() {
+        return " Name: " + this.name + ", Order number: " + this.order.getOrderNumber() + ", Location:" + this.location;
     }
 
     /* This method takes user input to place an order. Placing an order involves creating a restaurant object,
@@ -162,12 +150,14 @@ public class Customer {
                 + "to see your invoice.");
 
 
-        //close the scanner
-        input.close();
+        //close the scanner - not going to close this else main in Main with throw error after first order is placed
+        //input.close();
 
-        /*Create and return the Order object.
+        /*Create the Order object and save it to the customer's attribute
          */
-        return new Order(this, selectedRestaurant, menuItemsList, preparationInstructions);
+        Order placedOrder = new Order(this, selectedRestaurant, menuItemsList, preparationInstructions);
+        this.order = placedOrder;
+        return placedOrder;
     }
 
     //Getters and setters
@@ -189,6 +179,10 @@ public class Customer {
 
     public String getEmail() {
         return this.email;
+    }
+
+    public Order getOrder() {
+        return order;
     }
 
     private void setName(String name) {
