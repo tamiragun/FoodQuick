@@ -53,7 +53,7 @@ public class FoodQuick {
 
     //Method to organise customers alphabetically and print out the result
 
-    public ArrayList<com.company.Customer> printCustomersAlphabetical() {
+    public void printCustomersAlphabetical() {
 
         /*Sort Arraylist of customer objects alphabetically which is possible because the Customer objects implement the
          *Comparable interface and have their own compareTo method.
@@ -82,6 +82,41 @@ public class FoodQuick {
             }
         }
 
-        return customersList;
+    }
+
+    //Method to organise customers by location and print out the result
+
+    public void printCustomersLocation() {
+
+        //Create a list where each element is a customer's location and then their name
+        ArrayList<String> namesLocations = new ArrayList<String>();
+
+        for (Customer customer : customersList) {
+            namesLocations.add(customer.getLocation()+", "+customer.getName());
+        }
+
+        //Then sort that ArrayList alphabetically by location
+        Collections.sort(namesLocations);
+
+        //Create a formatter object to write the location based list to
+        Formatter customersLocation = null;
+
+        try {
+            customersLocation = new Formatter("customersLocation.txt");
+
+            //Write the locations and customers to the file
+            for (String customer : namesLocations) {
+                customersLocation.format("%s %s", customer, "\n");
+            }
+
+        } catch (FileNotFoundException fileNotFoundException) {
+            //Display error message and error if this fails
+            fileNotFoundException.printStackTrace();
+        } finally {
+            //Close the file
+            if (customersLocation != null) {
+                customersLocation.close();
+            }
+        }
     }
 }

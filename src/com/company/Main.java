@@ -15,10 +15,14 @@ public class Main {
 		Order order2 = customer2.placeOrder();
 		order2.printInvoice();
 
+		Customer customer3 = foodQuick.newCustomer();
+		Order order3 = customer3.placeOrder();
+		order3.printInvoice();
+
 		//Print a list of all customers and their order number alphabetically
 		foodQuick.printCustomersAlphabetical();
 
 		//Print a list of all customers by location
-
+		foodQuick.printCustomersLocation();
     }
 }
