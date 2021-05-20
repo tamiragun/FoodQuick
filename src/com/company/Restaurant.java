@@ -1,7 +1,7 @@
 /*This class describes Restaurants, that get created by the Customer, have
  * attributes that can be accessed from the Customer class, and have a method
  * that checks which drivers in the same city as the restaurant has the lowest
- * load, based on an input file drivers.txt.
+ * load, based on an input file drive-info.txt.
  */
 
 package com.company;
@@ -43,7 +43,7 @@ public class Restaurant {
         /*Create file object to read from the file, and scanner object to search
          * the file.
          */
-        File text1 = new File("drivers.txt");
+        File text1 = new File("driver-info.txt");
         Scanner scnr1 = null;
 
         /*Set default value for nearest driver. If no driver is found by the
@@ -113,7 +113,7 @@ public class Restaurant {
             scnr1.close();
         }
 
-        /*If a driver is assigned, update the drivers.txt file to reflect the driver's new load*/
+        /*If a driver is assigned, update the driver-info.txt file to reflect the driver's new load*/
         if (closestDriver != "No drivers") {
 
             /*Loop through the arraylist of all split drivers, locations, and loads, and convert them to a single
@@ -128,8 +128,8 @@ public class Restaurant {
                 newText+= allDrivers.get(i)[0] + ", " + allDrivers.get(i)[1] + ", " + allDrivers.get(i)[2] + "\n";
             }
 
-            //Create new File and Formatter so that the new list of drivers can be written to the drivers.txt file.
-            File text2 = new File("drivers.txt");
+            //Create new File and Formatter so that the new list of drivers can be written to the driver-info.txt file.
+            File text2 = new File("driver-info.txt");
             Formatter drivers = null;
 
             try {
