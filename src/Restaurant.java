@@ -4,7 +4,6 @@
  * load, based on an input file drive-info.txt.
  */
 
-package com.company;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Formatter;

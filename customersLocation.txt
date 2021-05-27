@@ -1,2 +1,3 @@
-Durban, Nono 
-Table View, Tamira 
+Cape Town, Nono 
+Cape Town, Tamira 
+Durban, Robert 
