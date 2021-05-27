@@ -108,8 +108,9 @@ public class Restaurant {
 
         //Close the scanner
         finally {
-
-            scnr1.close();
+            if (scnr1 != null) {
+                scnr1.close();
+            }
         }
 
         /*If a driver is assigned, update the driver-info.txt file to reflect the driver's new load*/
