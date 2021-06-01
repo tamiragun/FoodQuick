@@ -1,6 +1,5 @@
 //This class is for customers, who have contact info and can instantiate objects of their class using user input.
 
-package com.company;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;

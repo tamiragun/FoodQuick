@@ -1,4 +1,3 @@
-package com.company;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +140,9 @@ public class Order {
             fileNotFoundException.printStackTrace();
         } finally {
             //Close the file
-            invoice.close();
+            if (invoice != null) {
+                invoice.close();
+            }
         }
 
     }
