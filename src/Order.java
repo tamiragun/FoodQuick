@@ -140,7 +140,9 @@ public class Order {
             fileNotFoundException.printStackTrace();
         } finally {
             //Close the file
-            invoice.close();
+            if (invoice != null) {
+                invoice.close();
+            }
         }
 
     }
