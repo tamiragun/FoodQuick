@@ -1,5 +1,9 @@
 //This class is for customers, who have contact info and can instantiate objects of their class using user input.
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -136,7 +140,7 @@ public class Customer implements Comparable<Customer> {
 
         }
 
-        /*Get user input for special instructons and assign the result to the
+        /*Get user input for special instructions and assign the result to the
          * customer's corresponding attribute.
          */
         System.out.println("Do you have any special instructions?");
@@ -158,6 +162,90 @@ public class Customer implements Comparable<Customer> {
         this.order = placedOrder;
         return placedOrder;
     }
+   
+   /**
+   * Allows a user or administrator to search a customer record based on
+   * email address (which has a UNIQUE constraint in the database), and
+   * then choose which column they would like to update, and enter a new
+   * value. 
+   * <p>
+   * If the user wants to make multiple edits, they will need to call the 
+   * function multiple times.
+   * <p>
+   * If the user enters an email that is not in the database, or a column
+   * that is not in the customers table, they get an error and the method
+   * ends.
+   * <p>
+   * There are no parameters, as the input is obtained within the method
+   * via the cosnole.
+   * 
+   * @return  a boolean stating if the update operation was successful or not
+   */
+   public static boolean updateCustomerInfo() {
+	   //Create scanner object to take input from the console
+       Scanner input = new Scanner(System.in);
+
+       //Get inputs required to find the customer in the database
+       System.out.println("To edit your customer info, enter your email address");
+       String email = input.nextLine();
+       
+       //Get inputs required to find column that needs updating
+       System.out.println("Which field would you like to edit? \nType"
+       		+ " \"first_name\", \"last_name\", \"email\", \"street_name\", "
+       		+ "\"street_number\",\"city\", or \"phone\".");
+       String fieldToUpdate = input.nextLine();
+       
+       if (!(fieldToUpdate.equals("first_name") || fieldToUpdate.equals("last_name") || 
+    		   fieldToUpdate.equals("email")||fieldToUpdate.equals("street_name")||
+    		   fieldToUpdate.equals("street_number")||fieldToUpdate.equals("city")||
+    		   fieldToUpdate.equals("phone"))) {
+    	   System.out.println("You entered an incorrect field to update. "
+    	   		+ "Please restart the programme and try again.");
+    	   return false;
+       } else {
+	       //Get inputs required to update to a new value
+	       //Get inputs required to find column that needs updating
+	       System.out.println("What would you like to change that field to?");
+	       String newValue = input.nextLine();
+	       
+	       try {
+				//Establish a connection to the database
+				Connection connection = DriverManager.getConnection(
+					"jdbc:sqlserver://DESKTOP-JPRBQEE\\SQLEXPRESS;database=food_quick" ,
+					"task18" ,
+					"task18b"
+					);
+				
+				// Create a direct line to the database 
+				Statement statement = connection.createStatement();
+				
+				//Update the record based on the input given
+				int fieldsUpdated = statement.executeUpdate(
+						"UPDATE customers\r\n"
+						+ "SET " + fieldToUpdate + " = '" + newValue + "' "
+						+ "WHERE email = '" + email + "';");
+				
+				//If the query returns no results, warn the user
+				if (fieldsUpdated == 0) {
+					System.out.println("We couldn't find an existing record "
+							+ "with this email address. Please restart the "
+							+ "programme to search again, or enter a new customer.");
+					return false;
+				}
+				
+				// Close up our connections
+				statement.close();
+				connection.close();
+							
+			} catch (SQLException e) {
+					// This is to catch a SQLException - e.g. the id is not in the table, etc.
+					e.printStackTrace();
+					return false;
+			}
+	       
+	       return true;
+       }
+   }
 
     //Getters and setters
     public String getName() {

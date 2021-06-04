@@ -6,16 +6,15 @@ public class Main {
 
     public static void main(String[] args) {
     	
-  	
-    	
+    	   	
     	
     	//Create object for the FoodQuick outlet
-    	FoodQuick foodQuick = new FoodQuick();
+    	//FoodQuick foodQuick = new FoodQuick();
 
     	//Create customers who place orders, for which invoices are sent, and after which the drivers' load is updated
-    	Customer customer1 = foodQuick.newCustomer();
-    	Order order1 = customer1.placeOrder();
-    	order1.printInvoice();
+    	//Customer customer1 = foodQuick.newCustomer();
+    	//Order order1 = customer1.placeOrder();
+    	//order1.printInvoice();
 
 		/*
 		Customer customer2 = foodQuick.newCustomer();
@@ -31,6 +30,9 @@ public class Main {
 
 		//Print a list of all customers by location
 		foodQuick.printCustomersLocation();
+		
+		//Update a customer record
+		Customer.updateCustomerInfo();
 		*/
     }
 }
