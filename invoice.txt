@@ -1,1 +1,20 @@
-Sorry! Our drivers are too far away from you to be able to deliver to your location.
+Order number 1
+Customer: Tamira
+Email: test@test.com
+Phone number: 132456
+Location: Cape Town
+ 
+You have ordered the following from blowfish in Cape Town:
+ 
+1 x Hamburger (R90.0)
+
+Special instructions: No thx
+ 
+Total: R90.0
+ 
+26 is nearest to the restaurant and so he/she will be delivering your order to you at: 
+ 
+Test 101
+Cape Town
+
+If you need to contact the restaurant, their number is 98765432.

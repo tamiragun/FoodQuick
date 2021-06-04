@@ -95,7 +95,7 @@ public class Order {
          * nearestDriver method  on the restaurant object), then the invoice
          * needs to say that no driver was found.
          */
-        if (selectedRestaurant.nearestDriver(selectedRestaurant.getLocation()).equals("No drivers")) {
+        if (selectedRestaurant.nearestDriver(selectedRestaurant.getLocation()) == 0) {
             return "Sorry! Our drivers are too far away from you to be able "
                     + "to deliver to your location.";
         }
@@ -103,6 +103,17 @@ public class Order {
         /*If there is a driver found (used by calling the nearestDriver method
          * on the restaurant object), then we print out the full invoice
          */
+        
+        
+        //*********************************************************************
+        
+        
+        //UPDATE TO GET THE DRIVER NAME FROM DATABASE. NOW IT's JUST AN INT
+        
+        
+        //*************************************************************************
+        
+        
         else {
             return "Order number " + this.orderNumber +
                     "\nCustomer: " + customer.getName() +

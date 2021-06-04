@@ -1,6 +1,14 @@
+import java.sql.*;
+
 public class Main {
+	
+	
 
     public static void main(String[] args) {
+    	
+  	
+    	
+    	
     	//Create object for the FoodQuick outlet
     	FoodQuick foodQuick = new FoodQuick();
 
@@ -9,6 +17,7 @@ public class Main {
     	Order order1 = customer1.placeOrder();
     	order1.printInvoice();
 
+		/*
 		Customer customer2 = foodQuick.newCustomer();
 		Order order2 = customer2.placeOrder();
 		order2.printInvoice();
@@ -22,5 +31,6 @@ public class Main {
 
 		//Print a list of all customers by location
 		foodQuick.printCustomersLocation();
+		*/
     }
 }
