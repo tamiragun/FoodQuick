@@ -12,6 +12,7 @@ public class Customer implements Comparable<Customer> {
 
     //Attributes unique to the customer
 
+	private int customerId;
     private String name;
     private String location;
     private String contactNumber;
@@ -21,9 +22,10 @@ public class Customer implements Comparable<Customer> {
 
     //Constructor method
 
-    public Customer(String name, String location, String contactNumber,
+    public Customer(int customerId, String name, String location, String contactNumber,
                     String address, String email) {
-        this.name = name;
+        this.customerId = customerId;
+    	this.name = name;
         this.location = location;
         this.contactNumber = contactNumber;
         this.address = address;
@@ -114,21 +116,21 @@ public class Customer implements Comparable<Customer> {
                 case 1:
                     List list1=new ArrayList();
                     list1.add(quantity);
-                    list1.add(selectedRestaurant.getMenuItem1());
+                    list1.add(1);
                     list1.add(selectedRestaurant.getPriceItem1());
                     menuItemsList.add(list1);
                     break;
                 case 2:
                     List list2=new ArrayList();
                     list2.add(quantity);
-                    list2.add(selectedRestaurant.getMenuItem2());
+                    list2.add(2);
                     list2.add(selectedRestaurant.getPriceItem2());
                     menuItemsList.add(list2);
                     break;
                 case 3:
                     List list3=new ArrayList();
                     list3.add(quantity);
-                    list3.add(selectedRestaurant.getMenuItem3());
+                    list3.add(3);
                     list3.add(selectedRestaurant.getPriceItem3());
                     menuItemsList.add(list3);
                     break;
@@ -248,6 +250,11 @@ public class Customer implements Comparable<Customer> {
    }
 
     //Getters and setters
+    public int getCustomerId() {
+        return this.customerId;
+    }
+   
+   
     public String getName() {
         return this.name;
     }

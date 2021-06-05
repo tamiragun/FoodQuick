@@ -13,7 +13,8 @@ import java.sql.Statement;
 public class Restaurant {
 
     //Attributes
-    private String name;
+    private int restaurantId;
+	private String name;
     private String location;
     private String contactNumber;
     private String menuItem1 = "Hamburger";
@@ -26,7 +27,14 @@ public class Restaurant {
     //Constructor
 
     public Restaurant(String name,String location, String contactNumber) {
-        this.name = name;
+        //*******************************************************************************************************
+    	//CHANGE THIS TO FINDING A NEW ID EVERY TIME
+    	//********************************************************************************************************
+    	
+    	
+    	
+    	this.restaurantId = 100;
+    	this.name = name;
         this.location = location;
         this.contactNumber = contactNumber;
     }
@@ -109,6 +117,11 @@ public class Restaurant {
     }
     
     //Access methods
+    
+    public int getRestaurantId() {
+        return this.restaurantId;
+    }
+    
     public String getName() {
         return this.name;
     }

@@ -48,16 +48,7 @@ public class FoodQuick {
         System.out.println("What is your email address?");
         String email = input.nextLine();
 
-        //**************************************************************************************************
-        //UPDATE THIS WHEN UPDATING THE CUSTOMER ATTRIBUTES AND CONSTRUCTOR
-        //**************************************************************************************************
-        
-        //Create a customer object with the given input
-        Customer newCustomer = new Customer((first_name + " " + last_name), 
-        		location, contactNumber, (street_number + street_name), email);
-
-        //Add the new customer to the customer list in the FoodQuick company
-        customersList.add(newCustomer);
+        int latestCustomerId = 0;
 
         try {
 			//Establish a connection to the database
@@ -77,7 +68,7 @@ public class FoodQuick {
 					+ " ORDER BY customer_id DESC;");
 			
 			
-			int latestCustomerId = 0;
+			
 			
 			//Retrieve the driver name, id, and load from the query, and store them in variables
 			while (results.next()) {
@@ -104,7 +95,16 @@ public class FoodQuick {
 				e.printStackTrace();
 		}
 			    	
+      //**************************************************************************************************
+        //UPDATE THIS WHEN UPDATING THE CUSTOMER ATTRIBUTES AND CONSTRUCTOR
+        //**************************************************************************************************
         
+        //Create a customer object with the given input
+        Customer newCustomer = new Customer(latestCustomerId, (first_name + " " + last_name), 
+        		location, contactNumber, (street_number + " " + street_name), email);
+
+        //Add the new customer to the customer list in the FoodQuick company
+        customersList.add(newCustomer);
         
         //input1.close(); --Code doesn't run past this block if I close the scanner
         return newCustomer;

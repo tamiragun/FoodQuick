@@ -1,20 +1,22 @@
-Order number 1
-Customer: Tamira
-Email: test@test.com
-Phone number: 132456
+Order number 9
+Customer: Brad Pitt
+Email: brad@test.com
+Phone number: 8549751
 Location: Cape Town
  
-You have ordered the following from blowfish in Cape Town:
+You have ordered the following from Sushi Facroty in Cape Town:
  
-1 x Hamburger (R90.0)
+2 x Hamburger (R90.0)
+3 x Pizza (R85.5)
+1 x Fish & chips (R89.99)
 
-Special instructions: No thx
+Special instructions: No mayo
  
-Total: R90.0
+Total: R526.49
  
-26 is nearest to the restaurant and so he/she will be delivering your order to you at: 
+Miranda Metcalfe is nearest to the restaurant and so he/she will be delivering your order to you at: 
  
-Test 101
+12Hollywood Drive
 Cape Town
 
-If you need to contact the restaurant, their number is 98765432.
+If you need to contact the restaurant, their number is 5849756.

@@ -1,4 +1,9 @@
 import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Formatter;
@@ -10,10 +15,10 @@ public class Order {
     private Restaurant selectedRestaurant;
     private List<List> menuItemsList = new ArrayList<List>();
     private String preparationInstructions;
-    private static int totalOrders;
     private int orderNumber;
     private double totalBill;
     private String invoiceText;
+    private int nearestDriver;
 
     //Constructor method
     public Order(Customer customer, Restaurant selectedRestaurant,
@@ -22,10 +27,10 @@ public class Order {
         this.selectedRestaurant = selectedRestaurant;
         this.menuItemsList = menuItemsList;
         this.preparationInstructions = preparationInstructions;
-        this.orderNumber = totalOrders+1;
-        totalOrders+=1;
+        this.orderNumber = calculateOrderNumber();
         this.totalBill = calculateTotal(menuItemsList);
-        this.invoiceText = createInvoice();
+        this.nearestDriver = selectedRestaurant.nearestDriver(selectedRestaurant.getLocation());
+        //this.invoiceText = createInvoice();
     }
 
     /*Helper method to calculate the total cost of the bill based on the menu items
@@ -63,6 +68,82 @@ public class Order {
         return sum;
     }
 
+    //Get order number
+    
+    private int calculateOrderNumber() {
+    	try {
+			//Establish a connection to the database
+			Connection connection = DriverManager.getConnection(
+				"jdbc:sqlserver://DESKTOP-JPRBQEE\\SQLEXPRESS;database=food_quick" ,
+				"task18" ,
+				"task18b"
+				);
+			
+			// Create a direct line to the database 
+			Statement statement = connection.createStatement();
+			
+			//Create a result set, and run the SQL query that creates a new 
+			//row in the customers table
+			ResultSet results = statement.executeQuery(
+					"SELECT TOP 1 order_number FROM orders"
+					+ " ORDER BY order_number DESC;");
+			
+			
+			int latestOrderId = 0;
+			
+			//Retrieve the driver name, id, and load from the query, and store them in variables
+			while (results.next()) {
+				latestOrderId = results.getInt("order_number");
+			}
+			
+			//Increment the latest customerId by 1 to generate a new customerId
+			latestOrderId+=1;
+			
+			// Close up our connections
+			results.close();
+			statement.close();
+			connection.close();
+			
+			//Return the latest order id
+			return latestOrderId;
+									
+		} catch (SQLException e) {
+				// This is to catch a SQLException - e.g. the id is not in the table, etc.
+				e.printStackTrace();
+		}	    	
+		
+    	//In case the try block fails, return zero, which the database will reject
+		return 0;
+    }
+    
+    //Save the order in the database
+    
+    public void saveOrderInDatabase() {
+    	try {
+			//Establish a connection to the database
+			Connection connection = DriverManager.getConnection(
+				"jdbc:sqlserver://DESKTOP-JPRBQEE\\SQLEXPRESS;database=food_quick" ,
+				"task18" ,
+				"task18b"
+				);
+			
+			// Create a direct line to the database 
+			Statement statement = connection.createStatement();
+
+			//Create the record based on the input given
+			statement.executeUpdate(
+						"INSERT INTO orders VALUES (" + this.orderNumber + ", " + this.customer.getCustomerId() + ", " + this.selectedRestaurant.getRestaurantId() + ", " + selectedRestaurant.nearestDriver(selectedRestaurant.getLocation()) + ", " + this.totalBill + ", '" + this.preparationInstructions + "', NULL, NULL);");					
+			
+			// Close up our connections
+			statement.close();
+			connection.close();
+						
+		} catch (SQLException e) {
+				// This is to catch a SQLException - e.g. the id is not in the table, etc.
+				e.printStackTrace();
+		}
+    }
+    
     //Helper method to print the List of Lists so that it can be more easily called in the constructor
 
     private String printMenuItems(List<List> menuItemsList) {
@@ -72,17 +153,60 @@ public class Order {
          */
 
         String menuItems = "";
+        
+        try {
+			//Establish a connection to the database
+			Connection connection = DriverManager.getConnection(
+				"jdbc:sqlserver://DESKTOP-JPRBQEE\\SQLEXPRESS;database=food_quick" ,
+				"task18" ,
+				"task18b"
+				);
+			
+			// Create a direct line to the database 
+			Statement statement = connection.createStatement();
+			
+			
+	        //Loop through the list and concatenate a string for each item
+	        for (int j =0; j < this.menuItemsList.size(); j++) {
+	            int quantity = (int) menuItemsList.get(j).get(0);
+	            //String itemNumberAsString = (String) menuItemsList.get(j).get(1);
+	            int itemNumberAsInt = (int) menuItemsList.get(j).get(1);
+	            double price = (double) menuItemsList.get(j).get(2);
 
-        //Loop through the list and concatenate a string for each item
-        for (int j =0; j < this.menuItemsList.size(); j++) {
-            int quantity = (int) menuItemsList.get(j).get(0);
-            String item = (String) menuItemsList.get(j).get(1);
-            double price = (double) menuItemsList.get(j).get(2);
+				//Create the record based on the input given
+				statement.executeUpdate(
+						"INSERT INTO orders_menu_items VALUES (" + this.orderNumber + ", " + itemNumberAsInt + ", " + quantity + ");");
+				
+				//Convert the menu choice to text
+				String itemDescription = "";
+				switch (itemNumberAsInt) {
+					case 1:
+						itemDescription = selectedRestaurant.getMenuItem1();
+						break;
+					case 2:
+						itemDescription = selectedRestaurant.getMenuItem2();
+						break;
+					case 3:
+						itemDescription = selectedRestaurant.getMenuItem3();
+						break;
+					default:
+						itemDescription = "error";
+				}
+				
+	            //Then add to the total string
+	            menuItems += (quantity + " x " + itemDescription + " (R" + price + ")\n");
+	        }
 
-            //Then add to the total string
-            menuItems += (quantity + " x " + item + " (R" + price + ")\n");
-        }
-
+			
+			// Close up our connections
+			statement.close();
+			connection.close();
+						
+		} catch (SQLException e) {
+				// This is to catch a SQLException - e.g. the id is not in the table, etc.
+				e.printStackTrace();
+		}
+        
         //After finishing the loop, return the full string with all items
         return menuItems;
     }
@@ -95,7 +219,7 @@ public class Order {
          * nearestDriver method  on the restaurant object), then the invoice
          * needs to say that no driver was found.
          */
-        if (selectedRestaurant.nearestDriver(selectedRestaurant.getLocation()) == 0) {
+        if (nearestDriver == 0) {
             return "Sorry! Our drivers are too far away from you to be able "
                     + "to deliver to your location.";
         }
@@ -104,17 +228,40 @@ public class Order {
          * on the restaurant object), then we print out the full invoice
          */
         
-        
-        //*********************************************************************
-        
-        
-        //UPDATE TO GET THE DRIVER NAME FROM DATABASE. NOW IT's JUST AN INT
-        
-        
-        //*************************************************************************
-        
-        
         else {
+        	
+        	String driverName = "";        	 
+        	try {
+     			//Establish a connection to the database
+     			Connection connection = DriverManager.getConnection(
+     				"jdbc:sqlserver://DESKTOP-JPRBQEE\\SQLEXPRESS;database=food_quick" ,
+     				"task18" ,
+     				"task18b"
+     				);
+     			
+     			// Create a direct line to the database 
+     			Statement statement = connection.createStatement();
+     			//Create a result set, and initialize it to a value so that it can be closed 
+     			//at the end, else it is only initialized in the switch statement
+     			ResultSet results = statement.executeQuery("SELECT first_name, last_name FROM drivers WHERE driver_id = " + nearestDriver + ";");
+
+     			// Loop over the results, printing them all.
+     			while (results.next()) {
+     				String firstName = results.getString( "first_name" );
+     				String lastName = results.getString( "last_name" );
+     				driverName = firstName + " " + lastName;
+     			}
+     		
+     			// Close up our connections
+     			results.close();
+     			statement.close();
+     			connection.close();
+     					
+     		} catch (SQLException e) {
+     			// This is to catch a SQLException - e.g. the id is not in the table, etc.
+     			e.printStackTrace();
+     		}
+        	
             return "Order number " + this.orderNumber +
                     "\nCustomer: " + customer.getName() +
                     "\nEmail: " + customer.getEmail() +
@@ -125,7 +272,7 @@ public class Order {
                     "\n \n" + printMenuItems(menuItemsList) +
                     "\nSpecial instructions: " + preparationInstructions +
                     "\n \nTotal: R" + this.totalBill +
-                    "\n \n" + selectedRestaurant.nearestDriver(selectedRestaurant.getLocation()) +
+                    "\n \n" + driverName +
                     " is nearest to the restaurant and so he/she will be delivering "
                     + "your order to you at: \n \n" + customer.getAddress() + "\n" +
                     customer.getLocation() + "\n\nIf you need to contact the restaurant, "
@@ -145,7 +292,7 @@ public class Order {
             invoice = new Formatter("invoice.txt");
 
             //Write the invoice text to the file
-            invoice.format("%s", this.invoiceText);
+            invoice.format("%s", createInvoice());
         } catch (FileNotFoundException fileNotFoundException) {
             //Display error message and error if this fails
             fileNotFoundException.printStackTrace();
@@ -177,10 +324,6 @@ public class Order {
         return preparationInstructions;
     }
 
-    public static int getTotalOrders() {
-        return totalOrders;
-    }
-
     public int getOrderNumber() {
         return orderNumber;
     }
@@ -209,10 +352,6 @@ public class Order {
 
     public void setPreparationInstructions(String preparationInstructions) {
         this.preparationInstructions = preparationInstructions;
-    }
-
-    public static void setTotalOrders(int totalOrders) {
-        Order.totalOrders = totalOrders;
     }
 
     public void setOrderNumber(int orderNumber) {
