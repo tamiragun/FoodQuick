@@ -112,6 +112,97 @@ public class FoodQuick {
 
     //Method to organise customers alphabetically and print out the result
 
+    public boolean searchRecord() {
+    	 //Create scanner object to take input from the console
+        Scanner input = new Scanner(System.in);
+             
+        //Get inputs required to find column that needs updating
+        System.out.println("Which field would you like to search by? \nType"
+        		+ " \"order_number\", \"first_name\", or \"last_name\".");
+        String fieldToSearch = input.nextLine();
+        
+        if (!(fieldToSearch.equals("first_name") || fieldToSearch.equals("last_name") || 
+     		fieldToSearch.equals("order_number"))) {
+     	   System.out.println("You entered an incorrect field to update. "
+     	   		+ "Please restart the programme and try again.");
+     	   return false;
+     	   
+        } else {
+        	System.out.println("Which value do you want to search?");
+            String valueToSearch = input.nextLine();
+        	
+ 	       try {
+ 				//Establish a connection to the database
+ 				Connection connection = DriverManager.getConnection(
+ 					"jdbc:sqlserver://DESKTOP-JPRBQEE\\SQLEXPRESS;database=food_quick" ,
+ 					"task18" ,
+ 					"task18b"
+ 					);
+ 				
+ 				// Create a direct line to the database 
+ 				Statement statement = connection.createStatement();
+ 				ResultSet results = null;
+ 				
+ 				if (fieldToSearch.equals("order_number")) {
+ 	 				//Create a result set, and run the SQL query that selects a new 
+ 	 				//row in the customers table
+ 	 				results = statement.executeQuery(
+ 	 						"SELECT * FROM orders WHERE order_number = " + Integer.parseInt(valueToSearch) + ";");
+ 				} else if (fieldToSearch.equals("first_name")) {
+ 	 				//Create a result set, and run the SQL query that selects a new 
+ 	 				//row in the customers table
+ 	 				results = statement.executeQuery(
+ 	 						"SELECT * \r\n"
+ 	 						+ "FROM orders \r\n"
+ 	 						+ "JOIN customers\r\n"
+ 	 						+ "ON orders.customer_id = customers.customer_id\r\n"
+ 	 						+ "WHERE customers.first_name = '" + valueToSearch + "';");
+ 				} else if (fieldToSearch.equals("last_name")) {
+ 	 				//Create a result set, and run the SQL query that selects a new 
+ 	 				//row in the customers table
+ 	 				results = statement.executeQuery(
+ 	 						"SELECT * \r\n"
+ 	 						+ "FROM orders \r\n"
+ 	 						+ "JOIN customers\r\n"
+ 	 						+ "ON orders.customer_id = customers.customer_id\r\n"
+ 	 						+ "WHERE customers.last_name = '" + valueToSearch + "';");
+ 				}
+ 				
+ 				String orderInformation = "";
+ 				//Retrieve the order info
+ 				while (results.next()) {
+ 					orderInformation = "Order number: " + results.getInt("order_number") + "\nCustomer ID: " 
+ 				+ results.getInt("customer_id") + "\nRestaurant ID: " + results.getInt("restaurant_id") + "\nDriver ID: "
+ 				+ results.getInt("driver_id") + "\nTotal bill amount: R" + results.getFloat("total_bill") + "\nPreparation instructions: "
+ 				+ results.getString("instructions") + "\nOrder status: " + results.getString("finalised") + "\nDate order was finalised: "
+ 				+ results.getDate("date_finalised") + "\n";
+ 					System.out.println(orderInformation);
+ 				}
+ 				
+ 				
+ 				//If the query returns no results, warn the user
+ 				if (orderInformation == "") {
+ 					System.out.println("We couldn't find an existing record "
+ 							+ "with this information. Please restart the "
+ 							+ "programme to search again.");
+ 					return false;
+ 				}
+ 				
+ 				// Close up our connections
+ 				results.close();
+ 				statement.close();
+ 				connection.close();
+ 							
+ 			} catch (SQLException e) {
+ 					// This is to catch a SQLException - e.g. the id is not in the table, etc.
+ 					e.printStackTrace();
+ 					return false;
+ 			}
+ 	    
+        }
+ 	       return true;
+    }
+    	
     public void printCustomersAlphabetical() {
 
         /*Sort Arraylist of customer objects alphabetically which is possible because the Customer objects implement the

@@ -10,10 +10,10 @@ public class Main {
     	
     	//Create object for the FoodQuick outlet
     	FoodQuick foodQuick = new FoodQuick();
-
+    	foodQuick.searchRecord();
     	//Create customers who place orders, for which invoices are sent, and after which the drivers' load is updated
-    	Customer customer1 = foodQuick.newCustomer();
-    	Order order1 = customer1.placeOrder();
+    	//Customer customer1 = foodQuick.newCustomer();
+    	//Order order1 = customer1.placeOrder();
 
 		/*
 		Customer customer2 = foodQuick.newCustomer();
