@@ -14,8 +14,6 @@ public class Main {
     	//Create customers who place orders, for which invoices are sent, and after which the drivers' load is updated
     	Customer customer1 = foodQuick.newCustomer();
     	Order order1 = customer1.placeOrder();
-    	order1.saveOrderInDatabase();
-    	order1.printInvoice();
 
 		/*
 		Customer customer2 = foodQuick.newCustomer();

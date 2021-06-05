@@ -1,22 +1,20 @@
-Order number 9
-Customer: Brad Pitt
-Email: brad@test.com
-Phone number: 8549751
+Order number 11
+Customer: Hillary Clinton
+Email: hillary@test.com
+Phone number: 7846\
 Location: Cape Town
  
-You have ordered the following from Sushi Facroty in Cape Town:
+You have ordered the following from 5 Guys in Cape Town:
  
-2 x Hamburger (R90.0)
-3 x Pizza (R85.5)
-1 x Fish & chips (R89.99)
+3 x Hamburger (R90.0)
 
-Special instructions: No mayo
+Special instructions: No pickles
  
-Total: R526.49
+Total: R270.0
  
 Miranda Metcalfe is nearest to the restaurant and so he/she will be delivering your order to you at: 
  
-12Hollywood Drive
+78 Gmail street
 Cape Town
 
-If you need to contact the restaurant, their number is 5849756.
+If you need to contact the restaurant, their number is 496853.

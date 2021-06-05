@@ -17,7 +17,6 @@ public class Order {
     private String preparationInstructions;
     private int orderNumber;
     private double totalBill;
-    private String invoiceText;
     private int nearestDriver;
 
     //Constructor method
@@ -30,7 +29,8 @@ public class Order {
         this.orderNumber = calculateOrderNumber();
         this.totalBill = calculateTotal(menuItemsList);
         this.nearestDriver = selectedRestaurant.nearestDriver(selectedRestaurant.getLocation());
-        //this.invoiceText = createInvoice();
+        saveOrderInDatabase();
+        finaliseAndPrintInvoice();
     }
 
     /*Helper method to calculate the total cost of the bill based on the menu items
@@ -130,9 +130,25 @@ public class Order {
 			// Create a direct line to the database 
 			Statement statement = connection.createStatement();
 
+			/*If there is no driver, the order should be created with 'NULL' as a 
+			 * value for driver. Otherwise, it should pass the driver_id to the database.
+			 */
+			if (nearestDriver != 0) {
 			//Create the record based on the input given
-			statement.executeUpdate(
-						"INSERT INTO orders VALUES (" + this.orderNumber + ", " + this.customer.getCustomerId() + ", " + this.selectedRestaurant.getRestaurantId() + ", " + selectedRestaurant.nearestDriver(selectedRestaurant.getLocation()) + ", " + this.totalBill + ", '" + this.preparationInstructions + "', NULL, NULL);");					
+				statement.executeUpdate(
+						"INSERT INTO orders VALUES (" + this.orderNumber + ", " 
+						+ this.customer.getCustomerId() + ", " 
+						+ this.selectedRestaurant.getRestaurantId() 
+						+ ", " + nearestDriver + ", " + this.totalBill + ", '" 
+						+ this.preparationInstructions + "', NULL, NULL);");					
+			} else {
+				statement.executeUpdate(
+						"INSERT INTO orders VALUES (" + this.orderNumber + ", " 
+						+ this.customer.getCustomerId() + ", " 
+						+ this.selectedRestaurant.getRestaurantId() 
+						+ ", NULL , " + this.totalBill + ", '" 
+						+ this.preparationInstructions + "', NULL, NULL);");		
+			}
 			
 			// Close up our connections
 			statement.close();
@@ -213,14 +229,16 @@ public class Order {
 
     //Helper method to create the invoice text
 
-    private String createInvoice() {
+    private void finaliseAndPrintInvoice() {
 
         /*If there is no driver near the restaurant (used by calling the
          * nearestDriver method  on the restaurant object), then the invoice
          * needs to say that no driver was found.
          */
-        if (nearestDriver == 0) {
-            return "Sorry! Our drivers are too far away from you to be able "
+    	String invoiceText;
+    	
+    	if (nearestDriver == 0) {
+        	invoiceText = "Sorry! Our drivers are too far away from you to be able "
                     + "to deliver to your location.";
         }
 
@@ -230,7 +248,9 @@ public class Order {
         
         else {
         	
-        	String driverName = "";        	 
+        	String driverName = "";
+        	
+        	
         	try {
      			//Establish a connection to the database
      			Connection connection = DriverManager.getConnection(
@@ -251,6 +271,9 @@ public class Order {
      				String lastName = results.getString( "last_name" );
      				driverName = firstName + " " + lastName;
      			}
+     			
+     			statement.executeUpdate("UPDATE orders SET finalised = 'finalised' WHERE order_number = "+ this.orderNumber + "; "
+     					+ "UPDATE orders SET date_finalised = GETDATE() WHERE order_number = "+ this.orderNumber + ";");
      		
      			// Close up our connections
      			results.close();
@@ -262,7 +285,7 @@ public class Order {
      			e.printStackTrace();
      		}
         	
-            return "Order number " + this.orderNumber +
+        	invoiceText = "Order number " + this.orderNumber +
                     "\nCustomer: " + customer.getName() +
                     "\nEmail: " + customer.getEmail() +
                     "\nPhone number: " + customer.getContactNumber() +
@@ -277,12 +300,33 @@ public class Order {
                     + "your order to you at: \n \n" + customer.getAddress() + "\n" +
                     customer.getLocation() + "\n\nIf you need to contact the restaurant, "
                     + "their number is " + selectedRestaurant.getContactNumber() + ".";
+        	
+        	//Create a formatter object to write the invoice to
+            Formatter invoice = null;
+
+            try {
+                invoice = new Formatter("invoice.txt");
+
+                //Write the invoice text to the file
+                invoice.format("%s", invoiceText);
+            } catch (FileNotFoundException fileNotFoundException) {
+                //Display error message and error if this fails
+                fileNotFoundException.printStackTrace();
+            } finally {
+                //Close the file
+                if (invoice != null) {
+                    invoice.close();
+                }
+            }
+        	
         }
 
     }
 
     //Public method to print the invoice to a text file
-
+    
+    //No longer needed
+    /*
     public void printInvoice() {
 
         //Create a formatter object to write the invoice to
@@ -292,7 +336,7 @@ public class Order {
             invoice = new Formatter("invoice.txt");
 
             //Write the invoice text to the file
-            invoice.format("%s", createInvoice());
+            invoice.format("%s", finaliseAndPrintInvoice());
         } catch (FileNotFoundException fileNotFoundException) {
             //Display error message and error if this fails
             fileNotFoundException.printStackTrace();
@@ -305,7 +349,7 @@ public class Order {
 
     }
 
-
+     */
 
     //Accessor methods
     public Customer getCustomer() {
@@ -330,10 +374,6 @@ public class Order {
 
     public double getTotalBill() {
         return totalBill;
-    }
-
-    public String getInvoiceText() {
-        return invoiceText;
     }
 
     //Mutator methods. To be used for example if a customer wants to make changes after the order is placed.
@@ -362,7 +402,4 @@ public class Order {
         this.totalBill = totalBill;
     }
 
-    public void setInvoiceText(String invoiceText) {
-        this.invoiceText = invoiceText;
-    }
 }
