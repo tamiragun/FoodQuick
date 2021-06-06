@@ -1,20 +1,20 @@
-Order number 11
-Customer: Hillary Clinton
-Email: hillary@test.com
-Phone number: 7846\
-Location: Cape Town
+Order number 13
+Customer: Joe Biden
+Email: joe@test.com
+Phone number: 7748596
+City: Durban
  
-You have ordered the following from 5 Guys in Cape Town:
+You have ordered the following from Tigers Milk in Durban:
  
-3 x Hamburger (R90.0)
+4 x Hamburger (R90.0)
 
-Special instructions: No pickles
+Special instructions: Extra jalapeno
  
-Total: R270.0
+Total: R360.0
  
-Miranda Metcalfe is nearest to the restaurant and so he/she will be delivering your order to you at: 
+Eugene Santana is nearest to the restaurant and so he/she will be delivering your order to you at: 
  
-78 Gmail street
-Cape Town
+1 White House
+Durban
 
-If you need to contact the restaurant, their number is 496853.
+If you need to contact the restaurant, their number is 78364444.

@@ -8,52 +8,67 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Customer implements Comparable<Customer> {
-
-    //Attributes unique to the customer
+/**
+ * Class for customers. Customers have contact info and can place orders.
+ * They can also update their information directly in the database.
+ *
+ * @author Tamira
+ * @version 06 June 2021
+ */
+public class Customer {
 
 	private int customerId;
-    private String name;
-    private String location;
-    private String contactNumber;
-    private String address;
+    private String firstName;
+    private String lastName;
+    private String city;
+    private String phone;
+    private String streetName;
+    private String streetNumber;
     private String email;
+    
+    //TODO remove the order object from the customer object's attributes?
     private Order order;
 
-    //Constructor method
 
-    public Customer(int customerId, String name, String location, String contactNumber,
-                    String address, String email) {
+   /**
+    * Constructor method for customers. Customers have contact info and can place orders.
+    * They can also update their information directly in the database.
+    *
+    * @param	customerId		A unique id that locates the customer in the database
+    * @param	firstName		The customer's first name
+    * @param	lastName		The customer's last name
+    * @param	city			The city where the customer lives
+    * @param	streetName		The customr's street address
+    * @param	streetNumber	The customer's street number
+    * @param	email			The customer's email. This has a UNIQUE constraint in the database
+    */
+    public Customer(int customerId, String firstName, String lastName, 
+    		String city, String phone,
+            String streetName, String streetNumber, String email) {
         this.customerId = customerId;
-    	this.name = name;
-        this.location = location;
-        this.contactNumber = contactNumber;
-        this.address = address;
+    	this.firstName = firstName;
+    	this.lastName = lastName;
+        this.city = city;
+        this.phone = phone;
+        this.streetName = streetName;
+        this.streetNumber = streetNumber;
         this.email = email;
     }
 
-    /*Override compareTo() method of the interface so that Customer objects can be compared*/
-    @Override
-    public int compareTo(Customer customer) {
-
-        if (this.name.compareToIgnoreCase(customer.getName()) == 0){
-            return 0;
-        }else if (this.name.compareToIgnoreCase(customer.getName()) == 1){
-            return 1;
-        }else {
-            return -1;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return " Name: " + this.name + ", Order number: " + this.order.getOrderNumber() + ", Location:" + this.location;
-    }
-
-    /* This method takes user input to place an order. Placing an order involves creating a restaurant object,
-    making a list of desired menu items, giving special instructions, and returning an Order object.
-     */
-
+   /**
+   * Collects the input necessary to start placing an order. 
+   * <p>
+   * The user is asked to enter the restaurant, menu selections, quantities
+   * and special instructions.
+   * <p>
+   * An object of type Restaurant is created, and an object of type Order
+   * is created. These are used in other classes to finalize the order.
+   * <p>
+   * There are no parameters, as the input is obtained within the method
+   * via the console.
+   * 
+   * @return  an object of type Order
+   */
    public Order placeOrder() {
 
         //Create scanner object to take input from the console
@@ -179,11 +194,20 @@ public class Customer implements Comparable<Customer> {
    * ends.
    * <p>
    * There are no parameters, as the input is obtained within the method
-   * via the cosnole.
+   * via the console.
    * 
    * @return  a boolean stating if the update operation was successful or not
    */
    public static boolean updateCustomerInfo() {
+	   /* TODO should this be static, or only callable on an object. 
+	    * And if the latter, should it not also set the customer attributes?
+	    * If it is static, then what if the object and the database item 
+	    * have different info? But if it is not, then how can a database 
+	    * administrator change a customer's info without first creating the
+	    * object?
+	    */
+	   
+	   
 	   //Create scanner object to take input from the console
        Scanner input = new Scanner(System.in);
 
@@ -254,21 +278,28 @@ public class Customer implements Comparable<Customer> {
         return this.customerId;
     }
    
-   
-    public String getName() {
-        return this.name;
+    public String getFirstName() {
+        return this.firstName;
+    }
+    
+    public String getLastName() {
+        return this.lastName;
     }
 
-    public String getLocation() {
-        return this.location;
+    public String getCity() {
+        return this.city;
     }
 
     public String getContactNumber() {
-        return this.contactNumber;
+        return this.phone;
     }
 
-    public String getAddress() {
-        return this.address;
+    public String getStreetName() {
+        return this.streetName;
+    }
+    
+    public String getStreetNumber() {
+        return this.streetNumber;
     }
 
     public String getEmail() {
@@ -279,23 +310,4 @@ public class Customer implements Comparable<Customer> {
         return order;
     }
 
-    private void setName(String name) {
-        this.name = name;
-    }
-
-    private void setLocation(String location) {
-        this.location = location;
-    }
-
-    private void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
-
-    private void setAddress(String address) {
-        this.address = address;
-    }
-
-    private void setEmail(String email) {
-        this.email = email;
-    }
 }

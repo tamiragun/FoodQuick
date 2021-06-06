@@ -1,3 +1,4 @@
+City: Cape Town, Customer: Shelly Baxter 
 City: Cape Town, Customer: Patty Moss 
 City: Cape Town, Customer: Cherie Lovelace 
 City: Cape Town, Customer: Anish Boopta 
@@ -19,7 +20,7 @@ City: Cape Town, Customer: Hillary Clinton
 City: Cape Town, Customer: Thabo Mbeki 
 City: Cape Town, Customer: Evo Morales 
 City: Cape Town, Customer: Tamira Gun 
-City: Capte Town, Customer: Shelly Baxter 
 City: Durban, Customer: Robert Gun 
+City: Durban, Customer: Joe Biden 
 City: Durben, Customer: Nono Chib 
 City: Paris, Customer: Emmanuel Macron 

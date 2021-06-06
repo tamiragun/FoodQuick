@@ -286,10 +286,10 @@ public class Order {
      		}
         	
         	invoiceText = "Order number " + this.orderNumber +
-                    "\nCustomer: " + customer.getName() +
+                    "\nCustomer: " + customer.getFirstName() + " " + customer.getLastName() +
                     "\nEmail: " + customer.getEmail() +
                     "\nPhone number: " + customer.getContactNumber() +
-                    "\nLocation: " + customer.getLocation() +
+                    "\nCity: " + customer.getCity() +
                     "\n \nYou have ordered the following from " + selectedRestaurant.getName()
                     + " in " + selectedRestaurant.getLocation() + ":" +
                     "\n \n" + printMenuItems(menuItemsList) +
@@ -297,8 +297,9 @@ public class Order {
                     "\n \nTotal: R" + this.totalBill +
                     "\n \n" + driverName +
                     " is nearest to the restaurant and so he/she will be delivering "
-                    + "your order to you at: \n \n" + customer.getAddress() + "\n" +
-                    customer.getLocation() + "\n\nIf you need to contact the restaurant, "
+                    + "your order to you at: \n \n" + customer.getStreetNumber() + " " 
+                    + customer.getStreetName() + "\n" +
+                    customer.getCity() + "\n\nIf you need to contact the restaurant, "
                     + "their number is " + selectedRestaurant.getContactNumber() + ".";
         	
         	//Create a formatter object to write the invoice to

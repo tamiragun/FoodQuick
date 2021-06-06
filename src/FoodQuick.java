@@ -100,8 +100,8 @@ public class FoodQuick {
         //**************************************************************************************************
         
         //Create a customer object with the given input
-        Customer newCustomer = new Customer(latestCustomerId, (first_name + " " + last_name), 
-        		location, contactNumber, (street_number + " " + street_name), email);
+        Customer newCustomer = new Customer(latestCustomerId, first_name, last_name, 
+        		location, contactNumber, street_name, street_number, email);
 
         //Add the new customer to the customer list in the FoodQuick company
         customersList.add(newCustomer);
@@ -283,8 +283,8 @@ public class FoodQuick {
  			//row in the customers table
  			results = statement.executeQuery(
  						"SELECT customers.first_name, customers.last_name, orders.order_number\r\n"
- 						+ "FROM orders\r\n"
- 						+ "JOIN customers\r\n"
+ 						+ "FROM customers\r\n"
+ 						+ "LEFT JOIN orders\r\n"
  						+ "ON customers.customer_id = orders.customer_id\r\n"
  						+ "ORDER BY first_name ASC;");
 

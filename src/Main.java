@@ -12,17 +12,8 @@ public class Main {
     	FoodQuick foodQuick = new FoodQuick();
     	
     	//Create customers who place orders, for which invoices are sent, and after which the drivers' load is updated
-    	//Customer customer1 = foodQuick.newCustomer();
-    	//Order order1 = customer1.placeOrder();
-
-		
-		//Customer customer2 = foodQuick.newCustomer();
-		//Order order2 = customer2.placeOrder();
-		//order2.printInvoice();
-
-		//Customer customer3 = foodQuick.newCustomer();
-		//Order order3 = customer3.placeOrder();
-		//order3.printInvoice();
+    	Customer customer1 = foodQuick.newCustomer();
+    	Order order1 = customer1.placeOrder();
 
 		//Print a list of all customers and their order number alphabetically
 		foodQuick.printCustomersAlphabetical();
