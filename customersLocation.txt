@@ -1,3 +1,25 @@
-Cape Town, Tamira 
-Durban, Nono 
-Johannesburg, Robert 
+City: Cape Town, Customer: Patty Moss 
+City: Cape Town, Customer: Cherie Lovelace 
+City: Cape Town, Customer: Anish Boopta 
+City: Cape Town, Customer: Henry VIII 
+City: Cape Town, Customer: Patrick Swinton 
+City: Cape Town, Customer: Tandi Miller 
+City: Cape Town, Customer: Kelly Fisher 
+City: Cape Town, Customer: Timi Gun 
+City: Cape Town, Customer: Boris Johnson 
+City: Cape Town, Customer: Vlad Putin 
+City: Cape Town, Customer: David Cameron 
+City: Cape Town, Customer: Timmy Chan 
+City: Cape Town, Customer: Sammy Philips 
+City: Cape Town, Customer: Patricia Frazier 
+City: Cape Town, Customer: melanie Samuelson 
+City: Cape Town, Customer: Brad Pitt 
+City: Cape Town, Customer: Tamira Gun 
+City: Cape Town, Customer: Hillary Clinton 
+City: Cape Town, Customer: Thabo Mbeki 
+City: Cape Town, Customer: Evo Morales 
+City: Cape Town, Customer: Tamira Gun 
+City: Capte Town, Customer: Shelly Baxter 
+City: Durban, Customer: Robert Gun 
+City: Durben, Customer: Nono Chib 
+City: Paris, Customer: Emmanuel Macron 

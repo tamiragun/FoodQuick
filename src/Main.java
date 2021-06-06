@@ -28,7 +28,7 @@ public class Main {
 		foodQuick.printCustomersAlphabetical();
 
 		//Print a list of all customers by location
-		//foodQuick.printCustomersLocation();
+		foodQuick.printCustomersByLocation();
 		
 		//Update a customer record
 		//Customer.updateCustomerInfo();

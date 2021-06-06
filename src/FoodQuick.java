@@ -263,7 +263,7 @@ public class FoodQuick {
     
     public void printCustomersAlphabetical() {
     	//Create a formatter object to write the alphabetical list to
-        Formatter customersAlphabetical2 = null;
+        Formatter customersAlphabetical = null;
     	try {
 			//Establish a connection to the database
 			Connection connection = DriverManager.getConnection(
@@ -277,7 +277,7 @@ public class FoodQuick {
 			ResultSet results = null;
 			
 	        
-	        customersAlphabetical2 = new Formatter("customersAlphabetical.txt");
+	        customersAlphabetical = new Formatter("customersAlphabetical.txt");
 			
  			//Create a result set, and run the SQL query that selects a new 
  			//row in the customers table
@@ -291,7 +291,7 @@ public class FoodQuick {
 			//Retrieve the order info
 			while (results.next()) {
 								
-				customersAlphabetical2.format("%s %s %s%s %o %s", "Customer: ",results.getString("first_name"), results.getString("last_name"),", Order number: ",
+				customersAlphabetical.format("%s %s %s%s %o %s", "Customer: ",results.getString("first_name"), results.getString("last_name"),", Order number: ",
 						results.getInt("order_number"),"\n");
 				
 			}
@@ -310,46 +310,69 @@ public class FoodQuick {
             fileNotFoundException.printStackTrace();
         } finally {
             //Close the file
-            if (customersAlphabetical2 != null) {
-                customersAlphabetical2.close();
+            if (customersAlphabetical != null) {
+                customersAlphabetical.close();
             }
         }
     }
 
 
     //Method to organise customers by location and print out the result
+    
+    public void printCustomersByLocation() {
+    	//Create a formatter object to write the alphabetical list to
+        Formatter customersByLocation = null;
+    	try {
+			//Establish a connection to the database
+			Connection connection = DriverManager.getConnection(
+				"jdbc:sqlserver://DESKTOP-JPRBQEE\\SQLEXPRESS;database=food_quick" ,
+				"task18" ,
+				"task18b"
+				);
+			
+			// Create a direct line to the database 
+			Statement statement = connection.createStatement();
+			ResultSet results = null;
+			
+	        
+			customersByLocation = new Formatter("customersLocation.txt");
+			
+ 			//Create a result set, and run the SQL query that selects a new 
+ 			//row in the customers table
+ 			results = statement.executeQuery(
+ 						"SELECT city, first_name, last_name\r\n"
+ 						+ "FROM customers\r\n"
+ 						+ "ORDER BY city;");
 
-    public void printCustomersLocation() {
+			//Retrieve the order info
+			while (results.next()) {
 
-        //Create a list where each element is a customer's location and then their name
-        ArrayList<String> namesLocations = new ArrayList<String>();
-
-        for (Customer customer : customersList) {
-            namesLocations.add(customer.getLocation()+", "+customer.getName());
-        }
-
-        //Then sort that ArrayList alphabetically by location
-        Collections.sort(namesLocations);
-
-        //Create a formatter object to write the location based list to
-        Formatter customersLocation = null;
-
-        try {
-            customersLocation = new Formatter("customersLocation.txt");
-
-            //Write the locations and customers to the file
-            for (String customer : namesLocations) {
-                customersLocation.format("%s %s", customer, "\n");
-            }
-
-        } catch (FileNotFoundException fileNotFoundException) {
+				customersByLocation.format("%s%s%s%s %s %s",
+						"City: ", results.getString("city"), 
+						", Customer: ", results.getString("first_name"), 
+							results.getString("last_name"),
+						"\n");
+				
+			}
+					
+			// Close up our connections
+			results.close();
+			statement.close();
+			connection.close();
+						
+		} catch (SQLException e) {
+				// This is to catch a SQLException - e.g. the id is not in the table, etc.
+				e.printStackTrace();
+				//return "Unable to execute your query.";
+		} catch (FileNotFoundException fileNotFoundException) {
             //Display error message and error if this fails
             fileNotFoundException.printStackTrace();
         } finally {
             //Close the file
-            if (customersLocation != null) {
-                customersLocation.close();
+            if (customersByLocation != null) {
+            	customersByLocation.close();
             }
         }
     }
+
 }
