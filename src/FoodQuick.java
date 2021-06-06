@@ -258,37 +258,64 @@ public class FoodQuick {
  	       return true;
     }
     
-    //Method to organise customers alphabetically and print out the result 	
+    
+    //Method to organsie customers alphabetically and print out the result
+    
     public void printCustomersAlphabetical() {
+    	//Create a formatter object to write the alphabetical list to
+        Formatter customersAlphabetical2 = null;
+    	try {
+			//Establish a connection to the database
+			Connection connection = DriverManager.getConnection(
+				"jdbc:sqlserver://DESKTOP-JPRBQEE\\SQLEXPRESS;database=food_quick" ,
+				"task18" ,
+				"task18b"
+				);
+			
+			// Create a direct line to the database 
+			Statement statement = connection.createStatement();
+			ResultSet results = null;
+			
+	        
+	        customersAlphabetical2 = new Formatter("customersAlphabetical.txt");
+			
+ 			//Create a result set, and run the SQL query that selects a new 
+ 			//row in the customers table
+ 			results = statement.executeQuery(
+ 						"SELECT customers.first_name, customers.last_name, orders.order_number\r\n"
+ 						+ "FROM orders\r\n"
+ 						+ "JOIN customers\r\n"
+ 						+ "ON customers.customer_id = orders.customer_id\r\n"
+ 						+ "ORDER BY first_name ASC;");
 
-        /*Sort Arraylist of customer objects alphabetically which is possible because the Customer objects implement the
-         *Comparable interface and have their own compareTo method.
-         */
-        Collections.sort(customersList);
-
-        //Create a formatter object to write the alphabetical list to
-        Formatter customersAlphabetical = null;
-
-        try {
-            customersAlphabetical = new Formatter("customersAlphabetical.txt");
-
-            //Write the customers and their order number to the file
-            for (Customer customer : customersList) {
-                customersAlphabetical.format("%s %s %s %o %s", "Customer: ",customer.getName(),", Order number: ",
-                        customer.getOrder().getOrderNumber(),"\n");
-            }
-
-        } catch (FileNotFoundException fileNotFoundException) {
+			//Retrieve the order info
+			while (results.next()) {
+								
+				customersAlphabetical2.format("%s %s %s%s %o %s", "Customer: ",results.getString("first_name"), results.getString("last_name"),", Order number: ",
+						results.getInt("order_number"),"\n");
+				
+			}
+					
+			// Close up our connections
+			results.close();
+			statement.close();
+			connection.close();
+						
+		} catch (SQLException e) {
+				// This is to catch a SQLException - e.g. the id is not in the table, etc.
+				e.printStackTrace();
+				//return "Unable to execute your query.";
+		} catch (FileNotFoundException fileNotFoundException) {
             //Display error message and error if this fails
             fileNotFoundException.printStackTrace();
         } finally {
             //Close the file
-            if (customersAlphabetical != null) {
-                customersAlphabetical.close();
+            if (customersAlphabetical2 != null) {
+                customersAlphabetical2.close();
             }
         }
-
     }
+
 
     //Method to organise customers by location and print out the result
 
