@@ -110,10 +110,65 @@ public class FoodQuick {
         return newCustomer;
     }
 
-    //Method to organise customers alphabetically and print out the result
+    
+    //Method to retrieve all incomplete orders from the database
+    
+    public String pullIncompleteOrders() {
+    	
+    	
+    	try {
+				//Establish a connection to the database
+				Connection connection = DriverManager.getConnection(
+					"jdbc:sqlserver://DESKTOP-JPRBQEE\\SQLEXPRESS;database=food_quick" ,
+					"task18" ,
+					"task18b"
+					);
+				
+				// Create a direct line to the database 
+				Statement statement = connection.createStatement();
+				ResultSet results = null;
+				
+	 			//Create a result set, and run the SQL query that selects a new 
+	 			//row in the customers table
+	 			results = statement.executeQuery(
+	 						"SELECT * FROM orders WHERE finalised IS NULL;");
+
+				
+				String incompleteOrders = "";
+				//Retrieve the order info
+				while (results.next()) {
+					incompleteOrders = "Order number: " + results.getInt("order_number") + "\nCustomer ID: " 
+				+ results.getInt("customer_id") + "\nRestaurant ID: " + results.getInt("restaurant_id") + "\nDriver ID: "
+				+ results.getInt("driver_id") + "\nTotal bill amount: R" + results.getFloat("total_bill") + "\nPreparation instructions: "
+				+ results.getString("instructions") + "\nOrder status: " + results.getString("finalised") + "\nDate order was finalised: "
+				+ results.getDate("date_finalised") + "\n";
+					System.out.println(incompleteOrders);
+				}
+				
+				
+				//If the query returns no results, warn the user
+				if (incompleteOrders == "") {
+					return "There are currently no incomplete orders.";
+				}
+				
+				// Close up our connections
+				results.close();
+				statement.close();
+				connection.close();
+							
+			} catch (SQLException e) {
+					// This is to catch a SQLException - e.g. the id is not in the table, etc.
+					e.printStackTrace();
+					return "Unable to execute your query.";
+			}
+    	
+    	return "There are currently no incomplete orders.";
+    }
+    
+    //Method to search a record by order number or customer name
 
     public boolean searchRecord() {
-    	 //Create scanner object to take input from the console
+    	//Create scanner object to take input from the console
         Scanner input = new Scanner(System.in);
              
         //Get inputs required to find column that needs updating
@@ -202,7 +257,8 @@ public class FoodQuick {
         }
  	       return true;
     }
-    	
+    
+    //Method to organise customers alphabetically and print out the result 	
     public void printCustomersAlphabetical() {
 
         /*Sort Arraylist of customer objects alphabetically which is possible because the Customer objects implement the
