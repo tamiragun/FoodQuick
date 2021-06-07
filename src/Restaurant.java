@@ -1,8 +1,3 @@
-/*This class describes Restaurants, that get created by the Customer, have
- * attributes that can be accessed from the Customer class, and have a method
- * that checks which drivers in the same city as the restaurant has the lowest
- * load, based on an input file drive-info.txt.
- */
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,13 +5,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+* This class describes Restaurants, that are saved in the database and
+* get created by the Customer when placing an order.
+* <p>
+* Restaurants have attributes such as contact info and menu items and
+* prices, that can be accessed from other classes. 
+* <p> Restaurants have a method that checks which drivers in the same 
+* city as the restaurant has the lowest load, based on the database.
+*
+* @author      Tamira
+* @version     7 June 2021
+*/
 public class Restaurant {
 
     //Attributes
     private int restaurantId;
 	private String name;
-    private String location;
-    private String contactNumber;
+    private String city;
+    private String phone;
     private String menuItem1 = "Hamburger";
     private double priceItem1 = 90.00;
     private String menuItem2 = "Pizza";
@@ -24,14 +31,21 @@ public class Restaurant {
     private String menuItem3 = "Fish & chips";
     private double priceItem3 = 89.99;
 
-    //Constructor
 
-    public Restaurant(int restaurantId, String name,String location, String contactNumber) {
+    /**
+    * Constructor simply assigns the input parameters.  
+    *
+    * @param  restaurantId	The unique id of that restaurant in the database
+    * @param  name	The name of the restaurant
+    * @param	city	The city the restaurant is located in
+    * @param	phone	The restaurant's phone number
+    */
+    public Restaurant(int restaurantId, String name, String city, String phone) {
     	
     	this.restaurantId = restaurantId;
     	this.name = name;
-        this.location = location;
-        this.contactNumber = contactNumber;
+        this.city = city;
+        this.phone = phone;
     }
 
 
@@ -44,7 +58,6 @@ public class Restaurant {
     * @return   the id of the driver with the lowest load, or if there are 
     * 			no drivers in the given location, it returns the number 0
     */
-    
     public int nearestDriver(String location) {
     	
     	//Declare variable to store the driver that the query will return
@@ -121,12 +134,12 @@ public class Restaurant {
         return this.name;
     }
 
-    public String getLocation() {
-        return this.location;
+    public String getCity() {
+        return this.city;
     }
 
-    public String getContactNumber() {
-        return this.contactNumber;
+    public String getPhone() {
+        return this.phone;
     }
 
     public String getMenuItem1() {
@@ -153,18 +166,6 @@ public class Restaurant {
         return this.priceItem3;
     }
 
-    //Mutator methods
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
 
 
 }

@@ -9,18 +9,37 @@ import java.util.Formatter;
 import java.util.Scanner;
 import java.util.Collections;
 
+/**
+* FoodQuick is a food delivery service. 
+* <p>
+* This class has no attributes, but has several methods that can be 
+* performed: adding a new customer, updating a customer's info in
+* the database, printing a list of customers by location or in
+* alphabetical order, searching for an order, and retrieving all
+* incomplete orders.
+*
+* @author      Tamira
+* @version     7 June 2021
+*/
 public class FoodQuick {
 
-    //Attribute: list of customer objects, which have order numbers and locations
-    private ArrayList<Customer> customersList;
-
-    //Constructor method
+	/**
+	* Basic constructor method, no parameters necessary as there are no 
+	* attributes to this class
+	*/
     public FoodQuick() {
-        this.customersList = new ArrayList<Customer>();
+        
     }
 
-    //Method that takes user input and creates a customer object with it. Adds the customer to the list of customers
-
+    /**
+    * Takes user input and creates a new customer record in the 
+    * database. Also creates a customer object with the given inputs. 
+    * <p>
+    * The method has no parameters as all input is obtained from the
+    * console.
+    * 
+    * @return      a customer object based in the given inputs
+    */
     public Customer newCustomer() {
 
         //Create scanner object to take input from the console
@@ -28,22 +47,22 @@ public class FoodQuick {
 
         //Save the inputs into variables that will be used to create Customer object
         System.out.println("What is your first name?");
-        String first_name = input.nextLine();
+        String firstName = input.nextLine();
         
         System.out.println("What is your last name?");
-        String last_name = input.nextLine();
+        String lastName = input.nextLine();
 
         System.out.println("What is your street name?");
-        String street_name = input.nextLine();
+        String streetName = input.nextLine();
         
         System.out.println("What is your street number?");
-        String street_number = input.nextLine();
+        String streetNumber = input.nextLine();
 
         System.out.println("What city do you live in?");
-        String location = input.nextLine();
+        String city = input.nextLine();
 
         System.out.println("What is your phone number?");
-        String contactNumber = input.nextLine();
+        String phone = input.nextLine();
 
         System.out.println("What is your email address?");
         String email = input.nextLine();
@@ -61,16 +80,15 @@ public class FoodQuick {
 			// Create a direct line to the database 
 			Statement statement = connection.createStatement();
 			
-			//Create a result set, and run the SQL query that creates a new 
-			//row in the customers table
+			/*First, establish a unique customer id by finding the current highest id and 
+			 * incrementing that by 1
+			 * 
+			 */
 			ResultSet results = statement.executeQuery(
 					"SELECT TOP 1 customer_id FROM customers"
 					+ " ORDER BY customer_id DESC;");
 			
-			
-			
-			
-			//Retrieve the driver name, id, and load from the query, and store them in variables
+			//Retrieve the customer id, and update the variable
 			while (results.next()) {
 				latestCustomerId = results.getInt("customer_id");
 			}
@@ -81,8 +99,8 @@ public class FoodQuick {
 			//Now create a new customer with the generated customerId and the above input
 			statement.executeUpdate(
 					"INSERT INTO customers VALUES (" + latestCustomerId + ", '" 
-							+ first_name + "', '" + last_name + "', '" + email + "', '" + street_name 
-							+ "', '" + street_number + "', '" + location + "', '" + contactNumber + "');");
+							+ firstName + "', '" + lastName + "', '" + email + "', '" + streetName 
+							+ "', '" + streetNumber + "', '" + city + "', '" + phone + "');");
 			
 			
 			// Close up our connections
@@ -95,93 +113,113 @@ public class FoodQuick {
 				e.printStackTrace();
 		}
 			    	
-      //**************************************************************************************************
-        //UPDATE THIS WHEN UPDATING THE CUSTOMER ATTRIBUTES AND CONSTRUCTOR
-        //**************************************************************************************************
-        
-        //Create a customer object with the given input
-        Customer newCustomer = new Customer(latestCustomerId, first_name, last_name, 
-        		location, contactNumber, street_name, street_number, email);
 
-        //Add the new customer to the customer list in the FoodQuick company
-        customersList.add(newCustomer);
-        
-        //input1.close(); --Code doesn't run past this block if I close the scanner
+        //Create a customer object with the given input
+        Customer newCustomer = new Customer(latestCustomerId, firstName, lastName, 
+        		city, phone, streetName, streetNumber, email);
+
         return newCustomer;
     }
 
-    
-    //Method to retrieve all incomplete orders from the database
-    
-    public String pullIncompleteOrders() {
-    	
+    /**
+    * Retrieves a list of all orders where the order status is NULL
+    * (as opposed to "finalized") from the database. 
+    * 
+    * @return      a String with all the incomplete orders and their details
+    */
+    public String retrieveIncompleteOrders() {
     	
     	try {
-				//Establish a connection to the database
-				Connection connection = DriverManager.getConnection(
-					"jdbc:sqlserver://DESKTOP-JPRBQEE\\SQLEXPRESS;database=food_quick" ,
-					"task18" ,
-					"task18b"
-					);
+			//Establish a connection to the database
+			Connection connection = DriverManager.getConnection(
+				"jdbc:sqlserver://DESKTOP-JPRBQEE\\SQLEXPRESS;database=food_quick" ,
+				"task18" ,
+				"task18b"
+				);
 				
-				// Create a direct line to the database 
-				Statement statement = connection.createStatement();
-				ResultSet results = null;
+			// Create a direct line to the database 
+			Statement statement = connection.createStatement();
+			ResultSet results = null;
 				
-	 			//Create a result set, and run the SQL query that selects a new 
-	 			//row in the customers table
-	 			results = statement.executeQuery(
-	 						"SELECT * FROM orders WHERE finalised IS NULL;");
+	 		//Create a result set, and run the SQL query that finds incomplete orders
+	 		results = statement.executeQuery(
+	 					"SELECT * FROM orders WHERE finalised IS NULL;");
 
-				
-				String incompleteOrders = "";
-				//Retrieve the order info
-				while (results.next()) {
-					incompleteOrders = "Order number: " + results.getInt("order_number") + "\nCustomer ID: " 
+			/* Initialize the string as empty, so that it can be accessed outside
+			 * of the try block, and so that we can print an error message if it
+			 * remains empty.
+			 */
+	 		
+			String incompleteOrders = "";
+			
+			
+			//Retrieve the order info and print and return the string
+			while (results.next()) {
+				incompleteOrders = "Order number: " + results.getInt("order_number") + "\nCustomer ID: " 
 				+ results.getInt("customer_id") + "\nRestaurant ID: " + results.getInt("restaurant_id") + "\nDriver ID: "
 				+ results.getInt("driver_id") + "\nTotal bill amount: R" + results.getFloat("total_bill") + "\nPreparation instructions: "
 				+ results.getString("instructions") + "\nOrder status: " + results.getString("finalised") + "\nDate order was finalised: "
 				+ results.getDate("date_finalised") + "\n";
-					System.out.println(incompleteOrders);
-				}
 				
-				
-				//If the query returns no results, warn the user
-				if (incompleteOrders == "") {
-					return "There are currently no incomplete orders.";
-				}
-				
-				// Close up our connections
-				results.close();
-				statement.close();
-				connection.close();
-							
-			} catch (SQLException e) {
-					// This is to catch a SQLException - e.g. the id is not in the table, etc.
-					e.printStackTrace();
-					return "Unable to execute your query.";
+				System.out.println(incompleteOrders);
+				return incompleteOrders;
 			}
+				
+			//If the query returns no results, warn the user
+			if (incompleteOrders == "") {
+				return "There are currently no incomplete orders.";
+			}
+				
+			// Close up our connections
+			results.close();
+			statement.close();
+			connection.close();
+							
+		} catch (SQLException e) {
+			// This is to catch a SQLException - e.g. the id is not in the table, etc.
+			e.printStackTrace();
+			return "Unable to execute your query.";
+		}
     	
+    	//Return statement if all else fails
     	return "There are currently no incomplete orders.";
     }
     
-    //Method to search a record by order number or customer name
-
-    public boolean searchRecord() {
+    /**
+    * Lets the user search an order by customer name or order number. 
+    * There are no parameters as all the input is taken from the console. 
+    * The results are printed directly to the console, of returning a string 
+    * 
+    * @return      a String with all matching orders and their details
+    */
+    public String searchRecord() {
+    	
     	//Create scanner object to take input from the console
         Scanner input = new Scanner(System.in);
              
+        
+        /* Create string to store the result in, so that it can be accessed
+         * outside the try block, and so that an error message can be sent
+         * if it remains empty.
+         */
+        String retrievedRecord = "";
+        
+        
         //Get inputs required to find column that needs updating
         System.out.println("Which field would you like to search by? \nType"
         		+ " \"order_number\", \"first_name\", or \"last_name\".");
         String fieldToSearch = input.nextLine();
         
+        
+        //If the user enters an invalid field, print error message and stop
         if (!(fieldToSearch.equals("first_name") || fieldToSearch.equals("last_name") || 
      		fieldToSearch.equals("order_number"))) {
      	   System.out.println("You entered an incorrect field to update. "
      	   		+ "Please restart the programme and try again.");
-     	   return false;
-     	   
+     	   return "You entered an incorrect field to update. "
+        	   		+ "Please restart the programme and try again.";
+     	
+     	//If a valid entry was given, obtain further input
         } else {
         	System.out.println("Which value do you want to search?");
             String valueToSearch = input.nextLine();
@@ -199,48 +237,62 @@ public class FoodQuick {
  				ResultSet results = null;
  				
  				if (fieldToSearch.equals("order_number")) {
- 	 				//Create a result set, and run the SQL query that selects a new 
- 	 				//row in the customers table
+ 	 				//Update the result set with running the SQL query on orders table
  	 				results = statement.executeQuery(
- 	 						"SELECT * FROM orders WHERE order_number = " + Integer.parseInt(valueToSearch) + ";");
+ 	 						"SELECT order_number, customer_id, restaurant_id, "
+ 	 						+ "driver_id, total_bill, instructions, finalised, "
+ 	 						+ "date_finalised FROM orders WHERE order_number = " 
+ 	 						+ Integer.parseInt(valueToSearch) + ";");
+ 	 				
  				} else if (fieldToSearch.equals("first_name")) {
- 	 				//Create a result set, and run the SQL query that selects a new 
- 	 				//row in the customers table
+
+ 					//Update the result set with running the SQL query combining both tables
  	 				results = statement.executeQuery(
- 	 						"SELECT * \r\n"
+ 	 						"SELECT orders.order_number, orders.customer_id, "
+ 	 						+ "orders.restaurant_id, orders.driver_id, "
+ 	 						+ "orders.total_bill, orders.instructions, orders.finalised, "
+ 	 						+ "orders.date_finalised \r\n"
  	 						+ "FROM orders \r\n"
  	 						+ "JOIN customers\r\n"
  	 						+ "ON orders.customer_id = customers.customer_id\r\n"
  	 						+ "WHERE customers.first_name = '" + valueToSearch + "';");
+ 	 				
  				} else if (fieldToSearch.equals("last_name")) {
- 	 				//Create a result set, and run the SQL query that selects a new 
- 	 				//row in the customers table
+
  	 				results = statement.executeQuery(
- 	 						"SELECT * \r\n"
- 	 						+ "FROM orders \r\n"
- 	 						+ "JOIN customers\r\n"
- 	 						+ "ON orders.customer_id = customers.customer_id\r\n"
- 	 						+ "WHERE customers.last_name = '" + valueToSearch + "';");
+ 	 						"SELECT orders.order_number, orders.customer_id, "
+ 	 	 	 					+ "orders.restaurant_id, orders.driver_id, "
+ 	 	 	 					+ "orders.total_bill, orders.instructions, orders.finalised, "
+ 	 	 	 					+ "orders.date_finalised \r\n"
+ 	 	 	 					+ "FROM orders \r\n"
+ 	 	 	 					+ "JOIN customers\r\n"
+ 	 	 	 					+ "ON orders.customer_id = customers.customer_id\r\n"
+ 	 	 	 					+ "WHERE customers.last_name = '" + valueToSearch + "';");
  				}
  				
- 				String orderInformation = "";
- 				//Retrieve the order info
+ 				//Retrieve the order info, and save it to the string
  				while (results.next()) {
- 					orderInformation = "Order number: " + results.getInt("order_number") + "\nCustomer ID: " 
- 				+ results.getInt("customer_id") + "\nRestaurant ID: " + results.getInt("restaurant_id") + "\nDriver ID: "
- 				+ results.getInt("driver_id") + "\nTotal bill amount: R" + results.getFloat("total_bill") + "\nPreparation instructions: "
- 				+ results.getString("instructions") + "\nOrder status: " + results.getString("finalised") + "\nDate order was finalised: "
- 				+ results.getDate("date_finalised") + "\n";
- 					System.out.println(orderInformation);
+ 					
+ 					retrievedRecord += "Order number: " + results.getInt("order_number")
+ 					+ "\nCustomer ID: " + results.getInt("customer_id") 
+ 					+ "\nRestaurant ID: " + results.getInt("restaurant_id") 
+ 					+ "\nDriver ID: " + results.getInt("driver_id") + "\nTotal bill amount: R" 
+ 					+ results.getFloat("total_bill") + "\nPreparation instructions: "
+ 					+ results.getString("instructions") + "\nOrder status: " 
+ 					+ results.getString("finalised") + "\nDate order was finalised: "
+ 					+ results.getDate("date_finalised") + "\n\n";
+ 					
  				}
  				
  				
  				//If the query returns no results, warn the user
- 				if (orderInformation == "") {
+ 				if (retrievedRecord == "") {
  					System.out.println("We couldn't find an existing record "
  							+ "with this information. Please restart the "
  							+ "programme to search again.");
- 					return false;
+ 					return "We couldn't find an existing record "
+ 							+ "with this information. Please restart the "
+ 							+ "programme to search again.";
  				}
  				
  				// Close up our connections
@@ -251,16 +303,21 @@ public class FoodQuick {
  			} catch (SQLException e) {
  					// This is to catch a SQLException - e.g. the id is not in the table, etc.
  					e.printStackTrace();
- 					return false;
+ 					return "There was an error executing your query.";
  			}
  	    
         }
- 	       return true;
+ 	      
+        //print and return the String of the retrieved result(s)
+        System.out.println(retrievedRecord);
+        return retrievedRecord;
     }
     
-    
-    //Method to organsie customers alphabetically and print out the result
-    
+    /**
+    * Generates a .txt file with a list of all customers and their order
+    * number in alphabetical order.
+    * 
+    */
     public void printCustomersAlphabetical() {
     	//Create a formatter object to write the alphabetical list to
         Formatter customersAlphabetical = null;
@@ -316,9 +373,9 @@ public class FoodQuick {
         }
     }
 
-
-    //Method to organise customers by location and print out the result
-    
+    /**
+    * Generates a .txt file with a list of all customers by city.
+    */
     public void printCustomersByLocation() {
     	//Create a formatter object to write the alphabetical list to
         Formatter customersByLocation = null;

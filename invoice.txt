@@ -1,19 +1,20 @@
-Order number 16
-Customer: Narenda Modi
-Email: narenda@test.com
-Phone number: 668549785
-City: Delhi
+Order number 18
+Customer: Salyy Urduuute
+Email: salyy@test.com
+Phone number: 9875462
+City: Cape Town
  
 You have ordered the following from Blowfish in Cape Town:
  
+1 x Pizza (R85.5)
 
-Special instructions: Extra cumin
+Special instructions: No thanks
  
-Total: R0.0
+Total: R85.5
  
 Miranda Metcalfe is nearest to the restaurant and so he/she will be delivering your order to you at: 
  
-9 Nirhadavan\
-Delhi
+2 Uppsala Drive
+Cape Town
 
 If you need to contact the restaurant, their number is 0215567887.
