@@ -2,6 +2,7 @@
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -74,110 +75,152 @@ public class Customer {
         //Create scanner object to take input from the console
         Scanner input = new Scanner(System.in);
 
-        //Get inputs required to create a Restaurant object
+        //Get inputs required to find the restaurant in the database
         System.out.println("Which restaurant would you like to order from?");
         String restaurantName = input.nextLine();
 
         System.out.println("What city is the restaurant located in?");
         String restaurantLocation = input.nextLine();
+        
+        //Initialise the other variables required to create the restaurant object
+		int restaurantId = 0;
+		String restaurantPhone = null;
+		
+		//Create a result set and set is as null for now, so that it can
+		//still be accessed outside of the try block.
+		ResultSet results = null;
 
-        System.out.println("What is the restaurant's contact number?");
-        String restaurantContactNumber = input.nextLine();
-
-        //Create a restaurant object, which will be used to check for drivers
-        Restaurant selectedRestaurant = new Restaurant(restaurantName, restaurantLocation,
-                restaurantContactNumber);
-
-        //Get inputs required to calculate the total bill and populate the invoice
-        int meal = 1;
-        List<List> menuItemsList = new ArrayList<List>();
-
-        //While loop to keep asking for meal choices until the user stops it
-        while (meal != 0) {
-
-            //The 3 options correspond to what the Restaurant class has on offer
-            System.out.println("What meal would you like to order? "
-                    + "\n \n Type 1 for Burger \n Type 2 for Pizza \n Type 3 for "
-                    + "Fish & chips. \n \nIf you don't want to order anything else, "
-                    + "type 0.");
-
-            meal = input.nextInt();
-            /*Calling next line after having called nextInt (else it won't
-             * take more input)
-             */
-            input.nextLine();
-
-
-            if (meal == 0) {
-                break;
-            }
-
-            //Ask quantity, which will be used to calculate total bill amount
-            System.out.println("How many of these would you like to order?");
-            int quantity = input.nextInt();
-            /*Calling next line after having called nextInt (else it won't
-             * take more input)
-             */
-            input.nextLine();
-
-
-            /*Add a row to the List of ordered menu items in the Customer's
-             * attributes. Depending on the menu item selected, we associated
-             * the full name and price of the menu item, taken from the
-             * restaurant object.
-             */
-
-            switch (meal) {
-                case 1:
-                    List list1=new ArrayList();
-                    list1.add(quantity);
-                    list1.add(1);
-                    list1.add(selectedRestaurant.getPriceItem1());
-                    menuItemsList.add(list1);
-                    break;
-                case 2:
-                    List list2=new ArrayList();
-                    list2.add(quantity);
-                    list2.add(2);
-                    list2.add(selectedRestaurant.getPriceItem2());
-                    menuItemsList.add(list2);
-                    break;
-                case 3:
-                    List list3=new ArrayList();
-                    list3.add(quantity);
-                    list3.add(3);
-                    list3.add(selectedRestaurant.getPriceItem3());
-                    menuItemsList.add(list3);
-                    break;
-                default:
-                    System.out.println("You entered an invalid menu choice. "
-                            + "Please place a new order");
-            }
-
-
-        }
-
-        /*Get user input for special instructions and assign the result to the
-         * customer's corresponding attribute.
-         */
-        System.out.println("Do you have any special instructions?");
-        String preparationInstructions = input.nextLine();
-
-        /*Print message to end the order and indicate that a text file was
-         * generated, so the user knows where to look.
-         */
-        System.out.println("\nThank you for your order. Please open invoice.txt "
-                + "to see your invoice.");
-
-
-        //close the scanner - not going to close this else main in Main with throw error after first order is placed
-        //input.close();
-
-        /*Create the Order object and save it to the customer's attribute
-         */
-        Order placedOrder = new Order(this, selectedRestaurant, menuItemsList, preparationInstructions);
-        this.order = placedOrder;
-        return placedOrder;
+        try {
+			//Establish a connection to the database
+			Connection connection = DriverManager.getConnection(
+				"jdbc:sqlserver://DESKTOP-JPRBQEE\\SQLEXPRESS;database=food_quick" ,
+				"task18" ,
+				"task18b"
+				);
+			
+			//Create a direct line to the database 
+			Statement statement = connection.createStatement();
+			
+			//Override the result variable with the SQL query to execute
+			//Using the input from the user to search the corresponding restaurant
+			results = statement.executeQuery(
+					"SELECT TOP 1 restaurant_id, name, city, phone FROM restaurants"
+					+ " WHERE name = '" + restaurantName + "' AND city = '" 
+					+ restaurantLocation + "';");
+			
+			//Retrieve the id and phone from the query, and store them in variables
+			while (results.next()) {
+				restaurantId = results.getInt("restaurant_id");
+				restaurantPhone = results.getString("phone");
+			}
+				        
+			// Close up our connections
+			statement.close();
+			connection.close();
+			results.close();
+						
+		} catch (SQLException e) {
+			// This is to catch a SQLException - e.g. the id is not in the table, etc.
+			e.printStackTrace();
+		}
+        
+        
+		//If the query returns no results, warn the user and end the program
+		if (restaurantId == 0 || restaurantPhone == null) {
+			System.out.println("We couldn't find an existing restaurant "
+					+ "with this name and city. Please restart the "
+					+ "programme to order again.");
+		} else {
+			
+			//Create a restaurant object, which will be used to check for drivers
+			Restaurant selectedRestaurant = new Restaurant(restaurantId, restaurantName, 
+						restaurantLocation, restaurantPhone);
+	        //Get inputs required to calculate the total bill and populate the invoice
+	        String meal = "4";
+	        List<List> menuItemsList = new ArrayList<List>();
+	
+	        //While loop to keep asking for meal choices until the user stops it
+	        while (!meal.equals("0")) {
+	
+	            //The 3 options correspond to what the Restaurant class has on offer
+	            System.out.println("What meal would you like to order? "
+	                    + "\n \n Type 1 for Burger \n Type 2 for Pizza \n Type 3 for "
+	                    + "Fish & chips. \n \nIf you don't want to order anything else, "
+	                    + "type 0.");
+	
+	            meal = input.nextLine();
+	
+	
+	            if (meal.equals("0")) {
+	                break;
+	            }
+	
+	            //Ask quantity, which will be used to calculate total bill amount
+	            System.out.println("How many of these would you like to order?");
+	            int quantity = input.nextInt();
+	            /*Calling next line after having called nextInt (else it won't
+	             * take more input)
+	             */
+	            input.nextLine();
+	
+	
+	            /*Add a row to the List of ordered menu items in the Customer's
+	             * attributes. Depending on the menu item selected, we associated
+	             * the full name and price of the menu item, taken from the
+	             * restaurant object.
+	             */
+	
+	            switch (meal) {
+	                case "1":
+	                    List list1=new ArrayList();
+	                    list1.add(quantity);
+	                    list1.add(1);
+	                    list1.add(selectedRestaurant.getPriceItem1());
+	                    menuItemsList.add(list1);
+	                    break;
+	                case "2":
+	                    List list2=new ArrayList();
+	                    list2.add(quantity);
+	                    list2.add(2);
+	                    list2.add(selectedRestaurant.getPriceItem2());
+	                    menuItemsList.add(list2);
+	                    break;
+	                case "3":
+	                    List list3=new ArrayList();
+	                    list3.add(quantity);
+	                    list3.add(3);
+	                    list3.add(selectedRestaurant.getPriceItem3());
+	                    menuItemsList.add(list3);
+	                    break;
+	                default:
+	                    System.out.println("You entered an invalid menu choice. "
+	                            + "Please place a new order");
+	            }
+	
+	
+	        }
+	
+	        /*Get user input for special instructions and assign the result to the
+	         * customer's corresponding attribute.
+	         */
+	        System.out.println("Do you have any special instructions?");
+	        String preparationInstructions = input.nextLine();
+	
+	        /*Print message to end the order and indicate that a text file was
+	         * generated, so the user knows where to look.
+	         */
+	        System.out.println("\nThank you for your order. Please open invoice.txt "
+	                + "to see your invoice.");
+	
+	
+	        //Create the Order object and save it to the customer's attribute
+	        Order placedOrder = new Order(this, selectedRestaurant, menuItemsList, 
+	        		preparationInstructions);
+	        this.order = placedOrder;
+	        return placedOrder;
+		}
+		
+		return null;
     }
    
    /**

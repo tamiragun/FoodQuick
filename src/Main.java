@@ -16,10 +16,10 @@ public class Main {
     	Order order1 = customer1.placeOrder();
 
 		//Print a list of all customers and their order number alphabetically
-		foodQuick.printCustomersAlphabetical();
+		//foodQuick.printCustomersAlphabetical();
 
 		//Print a list of all customers by location
-		foodQuick.printCustomersByLocation();
+		//foodQuick.printCustomersByLocation();
 		
 		//Update a customer record
 		//Customer.updateCustomerInfo();

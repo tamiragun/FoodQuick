@@ -26,14 +26,9 @@ public class Restaurant {
 
     //Constructor
 
-    public Restaurant(String name,String location, String contactNumber) {
-        //*******************************************************************************************************
-    	//CHANGE THIS TO FINDING A NEW ID EVERY TIME
-    	//********************************************************************************************************
+    public Restaurant(int restaurantId, String name,String location, String contactNumber) {
     	
-    	
-    	
-    	this.restaurantId = 100;
+    	this.restaurantId = restaurantId;
     	this.name = name;
         this.location = location;
         this.contactNumber = contactNumber;

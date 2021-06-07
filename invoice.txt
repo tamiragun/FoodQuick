@@ -1,20 +1,19 @@
-Order number 13
-Customer: Joe Biden
-Email: joe@test.com
-Phone number: 7748596
-City: Durban
+Order number 16
+Customer: Narenda Modi
+Email: narenda@test.com
+Phone number: 668549785
+City: Delhi
  
-You have ordered the following from Tigers Milk in Durban:
+You have ordered the following from Blowfish in Cape Town:
  
-4 x Hamburger (R90.0)
 
-Special instructions: Extra jalapeno
+Special instructions: Extra cumin
  
-Total: R360.0
+Total: R0.0
  
-Eugene Santana is nearest to the restaurant and so he/she will be delivering your order to you at: 
+Miranda Metcalfe is nearest to the restaurant and so he/she will be delivering your order to you at: 
  
-1 White House
-Durban
+9 Nirhadavan\
+Delhi
 
-If you need to contact the restaurant, their number is 78364444.
+If you need to contact the restaurant, their number is 0215567887.
