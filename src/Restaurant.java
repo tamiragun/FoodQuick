@@ -1,21 +1,29 @@
-/*This class describes Restaurants, that get created by the Customer, have
- * attributes that can be accessed from the Customer class, and have a method
- * that checks which drivers in the same city as the restaurant has the lowest
- * load, based on an input file drive-info.txt.
- */
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Formatter;
-import java.util.Scanner;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
+/**
+* This class describes Restaurants, that are saved in the database and
+* get created by the Customer when placing an order.
+* <p>
+* Restaurants have attributes such as contact info and menu items and
+* prices, that can be accessed from other classes. 
+* <p> Restaurants have a method that checks which drivers in the same 
+* city as the restaurant has the lowest load, based on the database.
+*
+* @author      Tamira
+* @version     7 June 2021
+*/
 public class Restaurant {
 
     //Attributes
-    private String name;
-    private String location;
-    private String contactNumber;
+    private int restaurantId;
+	private String name;
+    private String city;
+    private String phone;
     private String menuItem1 = "Hamburger";
     private double priceItem1 = 90.00;
     private String menuItem2 = "Pizza";
@@ -23,152 +31,115 @@ public class Restaurant {
     private String menuItem3 = "Fish & chips";
     private double priceItem3 = 89.99;
 
-    //Constructor
 
-    public Restaurant(String name,String location, String contactNumber) {
-        this.name = name;
-        this.location = location;
-        this.contactNumber = contactNumber;
-    }
-
-    /*Method to read an input file and check if there is a driver in the
-     * restaurant's location. If so, it returns the driver with the lowest load.
-     * This will be used in the Customer class' placeOrder method, to know what
-     * to print out to the invoice.
-     */
-
-    public String nearestDriver(String location) {
-
-        /*Create file object to read from the file, and scanner object to search
-         * the file.
-         */
-        File text1 = new File("driver-info.txt");
-        Scanner scnr1 = null;
-
-        /*Set default value for nearest driver. If no driver is found by the
-         * scanner, then this will be returned and the Customer's placeOrder
-         * method, and the invoice will say that there are no drivers.
-         *
-         * Also set default load to 100, so that any other load would be less
-         */
-        String closestDriver ="No drivers";
-        int lowestLoad = 100;
-        ArrayList<String[]> allDrivers = new ArrayList<String[]>();
-        String newText = "";
-
-        try {
-            //Initialise Scanner instance within try/catch block
-
-            scnr1 = new Scanner(text1);
-
-            //Read each line of the given file using Scanner class
-
-            while(scnr1.hasNextLine()){
-
-                /* Split each line by the comma, so that we instead get a list
-                 * with 3 values for each line. This is so that the driver,
-                 * location, and load can be accessed individually for each line
-                 */
-                String line = scnr1.nextLine();
-                String[] splittedLine = line.split(", ");
-                allDrivers.add(splittedLine);
-
-                /*IF the location element equals the location passed into the
-                 * method as a parameter, then we check for the load. If not,
-                 * we move on to the next line.
-                 */
-                if (splittedLine[1].equals(location)) {
-
-                    String driverName = splittedLine[0];
-                    int driverLoad = Integer.valueOf(splittedLine[2]);
-
-                    /*Now we check if this driver's load is less than the lowest
-                     * load recorded this far, as saved in the variable declared
-                     * at the start of this method
-                     */
-                    if (driverLoad < lowestLoad) {
-
-                        /*If the load is lower than the lowest, set it as the
-                         * new lowest load and also set the driver as the new
-                         * nearest driver.
-                         */
-                        lowestLoad = driverLoad;
-                        closestDriver = driverName;
-                    }
-                }
-            }
-        }
-
-        //In case there is an error, print to the console instead of crashing
-        catch (Exception e) {
-
-            System.out.println("Error");
-            System.out.println(e);
-        }
-
-        //Close the scanner
-        finally {
-            if (scnr1 != null) {
-                scnr1.close();
-            }
-        }
-
-        /*If a driver is assigned, update the driver-info.txt file to reflect the driver's new load*/
-        if (closestDriver != "No drivers") {
-
-            /*Loop through the arraylist of all split drivers, locations, and loads, and convert them to a single
-             * string that we'll write to the file. But when we encounter the nearest driver, we update their load to
-             * reflect the latest delivery.
-             */
-            for (int i=0; i<allDrivers.size();i++){
-                if (allDrivers.get(i)[0] == closestDriver) {
-                    //For the nearest driver, increment their load by one. Convert to string to match array type.
-                    allDrivers.get(i)[2] = String.valueOf(lowestLoad+1);
-                }
-                newText+= allDrivers.get(i)[0] + ", " + allDrivers.get(i)[1] + ", " + allDrivers.get(i)[2] + "\n";
-            }
-
-            //Create new File and Formatter so that the new list of drivers can be written to the driver-info.txt file.
-            File text2 = new File("driver-info.txt");
-            Formatter drivers = null;
-
-            try {
-                //The formatter will write to the same text we were just reading from above
-                drivers = new Formatter(text2);
-
-                //Write the new list of drivers to the file
-                drivers.format("%s", newText);
-
-            } catch (FileNotFoundException fileNotFoundException) {
-
-                //Display error message and error if this fails
-                fileNotFoundException.printStackTrace();
-
-            } finally {
-
-                //Close the file
-                if (drivers != null) {
-                    drivers.close();
-                }
-            }
-        }
-
-        //Return the closest driver, this will be used in the Order class
-        return closestDriver;
+    /**
+    * Constructor simply assigns the input parameters.  
+    *
+    * @param  restaurantId	The unique id of that restaurant in the database
+    * @param  name	The name of the restaurant
+    * @param	city	The city the restaurant is located in
+    * @param	phone	The restaurant's phone number
+    */
+    public Restaurant(int restaurantId, String name, String city, String phone) {
+    	
+    	this.restaurantId = restaurantId;
+    	this.name = name;
+        this.city = city;
+        this.phone = phone;
     }
 
 
+    /**
+    * Checks if there are any drivers in the city of the selected restaurant. 
+    * If there are, it selects the driver with the lowest load, and updates
+    * that driver's load by 1 delivery.  
+    *
+    * @param  	location  a string denoting the location to search for drivers
+    * @return   the id of the driver with the lowest load, or if there are 
+    * 			no drivers in the given location, it returns the number 0
+    */
+    public int nearestDriver(String location) {
+    	
+    	//Declare variable to store the driver that the query will return
+    	//Initialize as "0" in case the search comes up empty
+		int closestDriver = 0;
+		
+    	try {
+			//Establish a connection to the database
+			Connection connection = DriverManager.getConnection(
+				"jdbc:sqlserver://DESKTOP-JPRBQEE\\SQLEXPRESS;database=food_quick" ,
+				"task18" ,
+				"task18b"
+				);
+			
+			// Create a direct line to the database 
+			Statement statement = connection.createStatement();
+			
+			//Create a result set, and run the SQL query that selects the driver 
+			//with the lowest load in that city
+			ResultSet results = statement.executeQuery(
+					"SELECT TOP 1 driver_id, load FROM drivers"
+					+ " WHERE city = \'" + location
+					+ "\'  ORDER BY load ASC;");
+			
+			/*Declare variables to store the driver id and load that the query will return
+			 * Initialize them to blank values so that they can be accessed outside the 
+			 * while loop. Normally, these results should never be used because if there
+			 * is no match, the if statement below will return false, and the program
+			 * will jump straight to returning the string "No drivers".
+			 */
+			
+			int load = 0;
+			
+			//Retrieve the driver name, id, and load from the query, and store them in variables
+			while (results.next()) {
+				closestDriver = results.getInt("driver_id");
+				load = results.getInt("load");
+
+			}
+
+			//If a driver was found, update that driver's load with one  delivery
+			if (closestDriver != 0) {
+				load+=1;
+				statement.executeUpdate(
+						"UPDATE drivers SET load = " + load +
+						"WHERE driver_id = " + closestDriver + ";");
+			}
+			
+			// Close up our connections
+			results.close();
+			statement.close();
+			connection.close();
+			
+			} catch (SQLException e) {
+				// This is to catch a SQLException - e.g. the id is not in the table, etc.
+				e.printStackTrace();
+			}
+    	
+    	
+    		//Return the name of the driver, which will be used to print the invoice 
+    		//and create the row in the orders table
+    		return closestDriver;
+    		
+
+    }
+    
     //Access methods
+    
+    public int getRestaurantId() {
+        return this.restaurantId;
+    }
+    
     public String getName() {
         return this.name;
     }
 
-    public String getLocation() {
-        return this.location;
+    public String getCity() {
+        return this.city;
     }
 
-    public String getContactNumber() {
-        return this.contactNumber;
+    public String getPhone() {
+        return this.phone;
     }
 
     public String getMenuItem1() {
@@ -195,18 +166,6 @@ public class Restaurant {
         return this.priceItem3;
     }
 
-    //Mutator methods
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
 
 
 }

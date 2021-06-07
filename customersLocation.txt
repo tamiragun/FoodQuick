@@ -1,3 +1,37 @@
-r, r 
-t, t 
-t, t 
+City: Bloemfontein, Customer: Pedro Ghosh 
+City: Bloemfontein, Customer: Tefan Irwin 
+City: Cape Town, Customer: Nico Quinn 
+City: Cape Town, Customer: Michael Smith 
+City: Cape Town, Customer: Salyy Urduuute 
+City: Cape Town, Customer: Tamira Gun 
+City: Cape Town, Customer: Emmanuel Frank 
+City: Cape Town, Customer: Shelly Baxter 
+City: Cape Town, Customer: Patty Moss 
+City: Cape Town, Customer: Cherie Lovelace 
+City: Cape Town, Customer: Anish Boopta 
+City: Cape Town, Customer: Patrick Swinton 
+City: Cape Town, Customer: Tandi Miller 
+City: Cape Town, Customer: Kelly Fisher 
+City: Cape Town, Customer: Timi Gun 
+City: Cape Town, Customer: David Patel 
+City: Cape Town, Customer: Timmy Chan 
+City: Cape Town, Customer: Sammy Philips 
+City: Cape Town, Customer: Patricia Frazier 
+City: Cape Town, Customer: Melanie Samuelson 
+City: Cape Town, Customer: Brad Lopez 
+City: Cape Town, Customer: Tamira Gun 
+City: Cape Town, Customer: Hillary Mason 
+City: Durban, Customer: Leslie Tanner 
+City: Durban, Customer: Robert Gun 
+City: Durban, Customer: Vlad Xiang 
+City: Durben, Customer: Nono Chib 
+City: Johannesburg, Customer: Jair Reily 
+City: Johannesburg, Customer: Narenda Clark 
+City: Johannesburg, Customer: Li Baker 
+City: Johannesburg, Customer: Yoshihide Adams 
+City: Johannesburg, Customer: Thabo Trott 
+City: Johannesburg, Customer: Henry Davis 
+City: Stellenbosch, Customer: Angela Usman 
+City: Stellenbosch, Customer: Joe White 
+City: Table View, Customer: Boris Yakub 
+City: Table View, Customer: Evo Zafar 
