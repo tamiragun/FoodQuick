@@ -2,7 +2,13 @@
 
 ## Introdcution
 
-As part of my sofware engineering bootcamp, I had to create a programme for the fiction food delivery company "FoodQuick". These were the requirements:
+As part of my sofware engineering bootcamp, I had to create a programme for the fiction food delivery company "FoodQuick". It allows a user to place an order at a restaurant, then checks if there are nearby drivers and matches the order with the driver with the lowest load. It also prints an invoice to a .txt file for the customer, and updates the database with the customer info and the new driver load.
+
+Stack used: Java - SQL Server
+
+## The brief
+
+These were the detailed requirements for the capstone project:
 
 ### Version 1:
 - It reads a text file with a list of drivers who are in different cities and carry different loads of deliveries. 
